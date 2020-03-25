@@ -1,0 +1,93 @@
+import requests
+import urllib.request
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from datetime import datetime
+from selenium.webdriver.common.by import By
+import re
+import os
+
+
+# def startWith(masterWebsite, url):
+#     chrome_options = webdriver.ChromeOptions()
+#     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+#     chrome_options.add_argument("--headless")
+#     chrome_options.add_argument("--disable-dev-shm-usage")
+#     chrome_options.add_argument("--no-sandbox")
+#     driver = webdriver.Chrome(chrome_options=chrome_options,
+#                               executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+#     return process_price(driver, masterWebsite, url)
+
+
+def startWith(masterWebsite, url):
+    chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--window-size=1920x1080")
+    chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
+    driver = webdriver.Chrome(
+        chrome_options=chrome_options, executable_path=chrome_driver)
+    return process_price(driver, masterWebsite, url)
+
+
+def process_price(driver, masterWebsite, url):
+    try:
+        driver.get(url)
+        return extract_info(driver, masterWebsite)
+    except Exception as err:
+        print(err)
+        return ''
+    finally:
+        driver.quit()
+
+
+def extract_info(driver, masterWebsite):
+    product_info = {"image": "", "price": "", "rating": ""}
+    product_info["price"] = get_price(driver, masterWebsite)
+    product_info["image"] = get_images(driver, masterWebsite)
+    product_info["rating"] = get_rating(driver, masterWebsite)
+
+    return product_info
+
+
+def get_price(driver, masterWebsite):
+    try:
+        price = driver.find_element_by_class_name(masterWebsite.priceClass)
+        price = price.text
+        price = price.split(".")
+        price = price[0]
+        return re.sub("\\W+", '', price)
+    except Exception as err:
+        print(err)
+        return ""
+
+
+def get_images(driver, masterWebsite):
+    try:
+        temp_images = driver.find_element_by_class_name(
+            masterWebsite.imagesClass)
+        images = temp_images.find_element_by_tag_name('img').get_attribute(
+            'src') or temp_images.find_element_by_tag_name('img').get_attribute('data-src')
+        return images
+    except Exception as err:
+        print(err)
+        return ""
+
+
+# def parse_style_attribute(style_string):
+#     if 'background-image' in style_string:
+#         style_string = style_string.split(' url("')[1].replace('");', '')
+#         return style_string
+#     return None
+
+
+def get_rating(driver, masterWebsite):
+    try:
+        rating = driver.find_element_by_class_name(masterWebsite.ratingClass)
+        if rating:
+            rating = rating.get_attribute("innerHTML")
+        return rating
+    except Exception as err:
+        print(err)
+        return ""

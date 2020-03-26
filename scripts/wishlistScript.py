@@ -87,6 +87,8 @@ def get_rating(driver, masterWebsite):
         rating = driver.find_element_by_class_name(masterWebsite.ratingClass)
         if rating:
             rating = rating.get_attribute("innerHTML")
+            rating = re.findall("\\d+\\.\\d+", rating)
+            rating = len(rating) and rating[0]
         return rating
     except Exception as err:
         print(err)

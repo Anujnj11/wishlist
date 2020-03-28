@@ -3,6 +3,7 @@ import 'package:wishlist_tracker/sections/wish_list_view.dart';
 import 'package:wishlist_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlist_tracker/const/_const.dart';
+import 'package:wishlist_tracker/sections/wish_list_2_view.dart';
 
 class WishListTracker extends StatefulWidget {
   @override
@@ -33,7 +34,12 @@ class _WishListTrackerState extends State<WishListTracker> {
                       getSearchBarUI(),
                       getCategoryUI(),
                       Flexible(
-                        child: getPopularCourseUI(),
+                        // child: getPopularCourseUI(),
+                        child: WishList2View(
+                          callBack: () {
+                            moveTo();
+                          },
+                        ),
                       ),
                     ],
                   ),

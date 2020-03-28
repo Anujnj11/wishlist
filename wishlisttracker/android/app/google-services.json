@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "607055639143",
+    "firebase_url": "https://wishlisttracker-anuj.firebaseio.com",
+    "project_id": "wishlisttracker-anuj",
+    "storage_bucket": "wishlisttracker-anuj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607055639143:android:1fb2dd35b3257c30d91ac2",
+        "android_client_info": {
+          "package_name": "com.wishlisttracker.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "607055639143-j4h384eaha4htisv2dgamrb5ajfsueov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQCAWdSamlhbEIOslUPqKqFfesuTK416M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "607055639143-j4h384eaha4htisv2dgamrb5ajfsueov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

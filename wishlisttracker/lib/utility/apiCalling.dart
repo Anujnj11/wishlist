@@ -16,15 +16,19 @@ class ApiCalling {
   }
 
   static Future<dynamic> postReq(urlPath, reqBody) async {
+    var responseBody;
     try {
       //encode Map to JSON
       reqBody = json.encode(reqBody);
       var response = await http.Client().post('$endpoint/$urlPath',
           headers: {"Content-Type": "application/json"}, body: reqBody);
-      return response.body;
+
+      responseBody =
+          response.statusCode != 500 ? json.decode(response.body) : {};
+      return responseBody;
     } catch (err) {
       print(err);
-      return {};
+      return responseBody;
     }
   }
 }

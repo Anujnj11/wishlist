@@ -3,8 +3,11 @@ import os
 from flask import Flask
 from flask import Flask, jsonify, request, Response
 from database.models.db import initialize_db
-from database.models.masterWebsite import masterWebsite
+from database.models.exportModel import masterWebsite, userInfo
 import wishlistScript
+import firebaseNotification
+from tldextract import tldextract
+
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -43,9 +46,42 @@ def add_master():
 def get_price():
     try:
         body = request.get_json()
-        masterWS = masterWebsite.objects.get(id=body["websiteMasterId"])
-        info = wishlistScript.startWith(masterWS,body["websiteUrl"])
-        return info, 200
+        if body["websiteUrl"]:
+            urlS = tldextract.extract(body["websiteUrl"])
+            masterWS = get_domain_obj(urlS.domain)
+            if masterWS:
+                info = wishlistScript.startWith(masterWS, body["websiteUrl"])
+                info["statusCode"] = 1
+                return info, 200
+            else:
+                info["statusCode"] = 0
+                info["msg"] = "Product not supported"
+                return info, 200
+    except Exception as err:
+        print(err)
+        return {'id': err}, 500
+
+
+def get_domain_obj(domainName):
+    try:
+        objmasterW = masterWebsite.objects.get(domainName=domainName)
+        return objmasterW
+    except Exception as err:
+        print(err)
+        return ""
+
+
+@app.route('/userToken', methods=['POST'])
+def update_user():
+    try:
+        body = request.get_json()
+        new_user = userInfo.objects(deviceId=body["deviceId"]).modify(upsert=True, new=True,
+                                                                      set__deviceId=body["deviceId"],
+                                                                      set__firebaseId=body["firebaseId"],
+                                                                      )
+        new_user and new_user._created and firebaseNotification.send_to_token(
+            new_user["firebaseId"])
+        return Response(new_user.to_json(), mimetype="application/json", status=200)
     except Exception as err:
         print(err)
         return {'id': err}, 500

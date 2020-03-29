@@ -22,8 +22,8 @@ import os
 
 def startWith(masterWebsite, url):
     chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
     # chrome_options.add_argument("--window-size=1920x1080")
     chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
     driver = webdriver.Chrome(
@@ -47,6 +47,7 @@ def extract_info(driver, masterWebsite):
     product_info["price"] = get_price(driver, masterWebsite)
     product_info["image"] = get_images(driver, masterWebsite)
     product_info["rating"] = get_rating(driver, masterWebsite)
+    product_info["productName"] = get_productName(driver, masterWebsite)
 
     return product_info
 
@@ -90,6 +91,20 @@ def get_rating(driver, masterWebsite):
             rating = re.findall("\\d+\\.\\d+", rating)
             rating = len(rating) and rating[0]
         return rating
+    except Exception as err:
+        print(err)
+        return ""
+
+
+def get_productName(driver, masterWebsite):
+    try:
+        if masterWebsite.nameClass:
+            name = driver.find_element_by_class_name(masterWebsite.nameClass)
+        else:
+            name = driver.find_element_by_id(masterWebsite.nameId)
+
+        name = name.text
+        return name
     except Exception as err:
         print(err)
         return ""

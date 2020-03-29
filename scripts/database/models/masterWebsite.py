@@ -7,5 +7,7 @@ class masterWebsite(db.Document):
     priceClass = db.StringField()
     imagesClass = db.StringField()
     reviewClass = db.StringField()
+    nameClass = db.StringField()
+    nameId = db.StringField()
     ratingClass = db.StringField()
     isActive = db.BooleanField(default=True)

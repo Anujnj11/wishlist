@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 
 class SearchBar extends StatefulWidget {
@@ -10,7 +11,6 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   final _searchURL = new TextEditingController();
   Timer _debounce;
-  bool isSearching = false;
   @override
   void initState() {
     super.initState();
@@ -33,11 +33,8 @@ class _SearchBarState extends State<SearchBar> {
     });
   }
 
-  getProductInfo(searchURL) async {
-    isSearching = true;
-    SearchBarURL resObj = await SearchBarURL().getProductInfo(searchURL);
-    print(resObj.productName);
-    isSearching = false;
+  getProductInfo(searchURL) {
+    Provider.of<SearchBarURL>(context, listen: false).getProductInfo(searchURL);
   }
 
   @override
@@ -49,6 +46,8 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    // SearchBarURL obj = Provider.of<SearchBarURL>(context).getData;
+    // return Consumer<SearchBarURL>(builder: (context, searchBarObj, old) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0),

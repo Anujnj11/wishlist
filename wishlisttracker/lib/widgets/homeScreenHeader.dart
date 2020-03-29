@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/profile.dart';
 import 'package:wishlisttracker/widgets/searchBar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreenHeader extends StatefulWidget {
   @override

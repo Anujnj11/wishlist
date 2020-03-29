@@ -1,6 +1,9 @@
+import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/utility/apiCalling.dart';
 
-class SearchBarURL {
+class SearchBarURL extends ChangeNotifier {
+  SearchBarURL _sampleS;
+
   String id;
   String productUrl;
   String image;
@@ -16,13 +19,7 @@ class SearchBarURL {
       this.productUrl,
       this.rating});
 
-  SearchBarURL.initial()
-      : id = "0",
-        productUrl = '',
-        image = '',
-        price = "0",
-        productName = '',
-        rating = "";
+  SearchBarURL get getData => _sampleS;
 
   SearchBarURL.fromJson(Map<String, dynamic> json) {
     productUrl = json['productUrl'];
@@ -42,10 +39,11 @@ class SearchBarURL {
     return data;
   }
 
-  Future<SearchBarURL> getProductInfo(productUrl) async {
+  void getProductInfo(productUrl) async {
     var reqBody = {"websiteUrl": productUrl};
 
     var dynamicBody = await ApiCalling.postReq('getPrice', reqBody);
-    return SearchBarURL.fromJson(dynamicBody);
+    _sampleS = SearchBarURL.fromJson(dynamicBody);
+    notifyListeners();
   }
 }

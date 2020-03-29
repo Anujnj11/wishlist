@@ -1,8 +1,10 @@
+import 'package:flutter/scheduler.dart';
 import 'package:wishlisttracker/widgets/productsFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/homeScreenHeader.dart';
 import 'package:wishlisttracker/widgets/productList.dart';
-
+import 'package:wishlisttracker/utility/getDeviceInfo.dart';
+import 'package:wishlisttracker/utility/pushNotificationsManager.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,6 +12,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  PushNotificationsManager pnObj = new PushNotificationsManager();
+  DeviceInfo diObj = new DeviceInfo();
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) => {_setOtherUtility()});
+  }
+
+  void _setOtherUtility() {
+    pnObj.init();
+    pnObj.getMessage();
+    diObj.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

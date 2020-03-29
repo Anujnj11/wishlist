@@ -28,6 +28,7 @@ dependencies:
   firebase_messaging: 6.0.9
   firebase_core: ^0.4.0
   device_id: ^0.2.0
+  provider: ^4.0.4
 
 
 

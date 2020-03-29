@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/screen/homescreen.dart';
+import './router.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
             displayColor: Colors.white),
         // scaffoldBackgroundColor: Color(4294769918),
       ),
-      home: HomeScreen(),
+      // home: HomeScreen(),
+      initialRoute: '/',
+      onGenerateRoute: Router.generateRoute,
     );
   }
 }

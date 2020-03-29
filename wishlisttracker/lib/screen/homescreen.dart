@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/homeScreenHeader.dart';
 import 'package:wishlisttracker/widgets/productList.dart';
 import 'package:wishlisttracker/utility/getDeviceInfo.dart';
-import 'package:wishlisttracker/utility/pushNotificationsManager.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  PushNotificationsManager pnObj = new PushNotificationsManager();
   DeviceInfo diObj = new DeviceInfo();
 
   @override
@@ -22,8 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _setOtherUtility() {
-    pnObj.init();
-    pnObj.getMessage();
     diObj.init();
   }
 

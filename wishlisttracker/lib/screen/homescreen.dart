@@ -1,4 +1,7 @@
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
+import 'package:wishlisttracker/dialogs/productUrlDialog.dart';
+import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/widgets/productsFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/homeScreenHeader.dart';
@@ -32,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           HomeScreenHeader(),
           SizedBox(height: 10),
           ProductsFilter(),
-          ProductList()
+          ProductList(),
         ],
       ),
     );

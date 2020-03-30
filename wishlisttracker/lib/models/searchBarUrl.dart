@@ -2,7 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class SearchBarURL extends ChangeNotifier {
-  SearchBarURL _sampleS;
+  bool _searching = false;
+  SearchBarURL _searchedUrl;
 
   String id;
   String productUrl;
@@ -10,6 +11,14 @@ class SearchBarURL extends ChangeNotifier {
   String price;
   String productName;
   String rating;
+
+  SearchBarURL.initial()
+      : id = "0",
+        productUrl = '',
+        image = '',
+        price = "0",
+        productName = '',
+        rating = "";
 
   SearchBarURL(
       {this.id,
@@ -19,14 +28,18 @@ class SearchBarURL extends ChangeNotifier {
       this.productUrl,
       this.rating});
 
-  SearchBarURL get getData => _sampleS;
+  bool get isSearching => _searching;
+
+  SearchBarURL get getSearchedUrl => _searchedUrl;
 
   SearchBarURL.fromJson(Map<String, dynamic> json) {
-    productUrl = json['productUrl'];
-    image = json['image'];
-    price = json['price'];
-    productName = json['productName'];
-    rating = json['rating'];
+    if (json != null) {
+      productUrl = "";
+      image = json['image'];
+      price = json['price'];
+      productName = json['productName'];
+      rating = json['rating'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -41,9 +54,19 @@ class SearchBarURL extends ChangeNotifier {
 
   void getProductInfo(productUrl) async {
     var reqBody = {"websiteUrl": productUrl};
-
+    setSearching(true);
     var dynamicBody = await ApiCalling.postReq('getPrice', reqBody);
-    _sampleS = SearchBarURL.fromJson(dynamicBody);
+    _searchedUrl = SearchBarURL.fromJson(dynamicBody);
+    setSearching(false);
+  }
+
+  void setSearching(isSearching) {
+    _searching = isSearching;
+    notifyListeners();
+  }
+
+  void resetSearchedUrl() {
+    _searchedUrl = null;
     notifyListeners();
   }
 }

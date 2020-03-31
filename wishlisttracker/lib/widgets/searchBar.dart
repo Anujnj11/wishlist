@@ -10,14 +10,45 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  
+  var _searchURL = new TextEditingController();
+  Timer _debounce;
+
   @override
   void initState() {
     super.initState();
-    // _searchURL.addListener(_onSearchChanged);
+    setInitState();
   }
 
+  setInitState() {
+    _searchURL.addListener(_onSearchChanged);
+    // _searchURL.clear();
+  }
 
+  _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 2000), () {
+      var urlPattern =
+          r"(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?";
+      bool isValidUrl = new RegExp(urlPattern, caseSensitive: false)
+          .hasMatch(_searchURL.text);
+      print(isValidUrl);
+      if (isValidUrl) {
+        getProductInfo(_searchURL.text);
+        // _searchURL.clear();
+      }
+    });
+  }
+
+  getProductInfo(searchURL) {
+    Provider.of<SearchBarURL>(context, listen: false).getProductInfo(searchURL);
+  }
+
+  @override
+  void dispose() {
+    _searchURL.removeListener(_onSearchChanged);
+    _searchURL.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,20 +74,9 @@ class _SearchBarState extends State<SearchBar> {
             child: Padding(
               padding: EdgeInsets.all(3),
               child: TextField(
-                // onTap: () => ProductUrlDialogState().showDialogBox(context),
-                onTap: () => showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          contentPadding: EdgeInsets.only(top: 10.0),
-                          content: ProductUrlDialog());
-                    }),
-                // /Provider.of<SearchBarURL>(context, listen: false)
-                // /    .showDialogStatus(),
-                // controller: _searchURL,
+                // onTap: () => Provider.of<SearchBarURL>(context, listen: false)
+                //     .resetSearchedUrl(),
+                controller: _searchURL,
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -67,7 +87,7 @@ class _SearchBarState extends State<SearchBar> {
                       size: 30,
                     ),
                     border: InputBorder.none,
-                    hintText: "Tap to add product URL",
+                    hintText: "Paste product URL",
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey)),
               ),
             )),

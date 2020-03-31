@@ -18,7 +18,7 @@ class ProductUrlDialogState extends State<ProductUrlDialog> {
   @override
   void initState() {
     super.initState();
-    setInitState();
+    // setInitState();
   }
 
   setInitState() {
@@ -102,23 +102,24 @@ class ProductUrlDialogState extends State<ProductUrlDialog> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: TextField(
-                      controller: _searchURL,
-                      autofocus: true,
-                      style: TextStyle(height: 0.9),
-                      decoration: InputDecoration(
-                        labelText: "Paste URL",
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(),
-                        ),
-                      ),
-                      keyboardType: TextInputType.url,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(5.0),
+                  //   child: TextField(
+                  //     // onEditingComplete: ,
+                  //     controller: _searchURL,
+                  //     autofocus: true,
+                  //     style: TextStyle(height: 0.9),
+                  //     decoration: InputDecoration(
+                  //       labelText: "Paste URL",
+                  //       fillColor: Colors.white,
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10.0),
+                  //         borderSide: BorderSide(),
+                  //       ),
+                  //     ),
+                  //     keyboardType: TextInputType.url,
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
                     child: TextField(

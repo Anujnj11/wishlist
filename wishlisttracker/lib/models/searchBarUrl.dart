@@ -3,7 +3,7 @@ import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class SearchBarURL extends ChangeNotifier {
   bool _searching = false;
-  SearchBarURL _searchedUrl;
+  SearchBarURL _searchedUrl = new SearchBarURL();
 
   String id;
   String productUrl;
@@ -67,6 +67,7 @@ class SearchBarURL extends ChangeNotifier {
 
   void resetSearchedUrl() {
     _searchedUrl = null;
+    _searching = false;
     notifyListeners();
   }
 }

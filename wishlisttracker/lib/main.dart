@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color(0xFF3EBACE),
           // accentColor: Color(0xFFD8ECF1),
-          accentColor: Color(4281215567),
-          scaffoldBackgroundColor: Color(4294243574),
+          accentColor: Colors.black,//Color(4281215567),
+          scaffoldBackgroundColor: Color(4294440951),
 
           // Use the old theme but apply the following three changes
           textTheme: Theme.of(context).textTheme.apply(

@@ -78,7 +78,6 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
       "currentRating": _productPrice.text,
       "targetPrice": [values.start.toString(), values.end.toString()]
     };
-    print(reqBody);
     await SearchBarURL().saveWishList(reqBody);
     showInfo = false;
     _saveBtnController.success();

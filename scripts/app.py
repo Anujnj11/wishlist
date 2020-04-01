@@ -87,8 +87,6 @@ def update_user():
                                                                       set__deviceId=body["deviceId"],
                                                                       set__firebaseId=body["firebaseId"],
                                                                       )
-        new_user and new_user._created and firebaseNotification.send_to_token(
-            new_user["firebaseId"])
         userInfoD = {
             "id": str(new_user.id),
             "deviceId": new_user.deviceId,
@@ -110,8 +108,6 @@ def add_product():
         body["masterWebsiteId"] = ObjectId(body["masterWebsiteId"])
 
         newUserList = userWishlist(**body).save()
-        firebaseId = newUserList.userInfo.firebaseId
-        firebaseNotification.send_to_token(firebaseId, "Your wishlist has set")
         return Response(newUserList.to_json(), mimetype="application/json", status=200)
     except Exception as err:
         print(err)

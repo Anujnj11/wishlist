@@ -12,6 +12,7 @@ class SearchBarURL extends ChangeNotifier {
   String productName;
   String rating;
   String masterWebsiteId;
+  String domainName;
 
   SearchBarURL.initial()
       : id = "0",
@@ -20,6 +21,7 @@ class SearchBarURL extends ChangeNotifier {
         price = "0",
         productName = '',
         rating = "",
+        domainName = "",
         masterWebsiteId = "";
 
   SearchBarURL(
@@ -29,6 +31,7 @@ class SearchBarURL extends ChangeNotifier {
       this.image,
       this.productUrl,
       this.rating,
+      this.domainName,
       this.masterWebsiteId});
 
   bool get isSearching => _searching;
@@ -42,6 +45,7 @@ class SearchBarURL extends ChangeNotifier {
       price = json['price'];
       productName = json['productName'];
       rating = json['rating'];
+      domainName = json['domainName'];
       masterWebsiteId = json['masterWebsiteId'];
     }
   }
@@ -53,6 +57,7 @@ class SearchBarURL extends ChangeNotifier {
     data['image'] = this.image;
     data['productName'] = this.productName;
     data['rating'] = this.rating;
+    data['domainName'] = this.domainName;
     return data;
   }
 
@@ -77,5 +82,12 @@ class SearchBarURL extends ChangeNotifier {
     _searchedUrl = null;
     _searching = false;
     notifyListeners();
+  }
+
+  Future<bool> saveWishList(reqBody) async {
+    bool status = false;
+    var dynamicBody = await ApiCalling.postReq('addProduct', reqBody);
+    if (dynamicBody != null) status = true;
+    return status;
   }
 }

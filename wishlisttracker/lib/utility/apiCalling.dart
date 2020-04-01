@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiCalling {
-  static String endpoint = "https://8a276426.ngrok.io";
+  static String endpoint = "https://8acdbc16.ngrok.io";
 
   static Future<dynamic> getReq(urlPath) async {
     try {
@@ -24,7 +24,7 @@ class ApiCalling {
           headers: {"Content-Type": "application/json"}, body: reqBody);
 
       responseBody =
-          response.statusCode != 500 ? json.decode(response.body) : {};
+          response.statusCode != 500 ? json.decode(response.body) : null;
       return responseBody;
     } catch (err) {
       print(err);

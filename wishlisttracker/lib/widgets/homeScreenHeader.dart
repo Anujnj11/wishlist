@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
 import 'package:wishlisttracker/widgets/expandedSection.dart';
 import 'package:wishlisttracker/widgets/profile.dart';
 import 'package:wishlisttracker/widgets/searchBar.dart';
@@ -20,7 +21,6 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   bool showInfo = true;
   var _productName = new TextEditingController();
   var _productPrice = new TextEditingController();
-  var _expectedPrice = new TextEditingController();
   final RoundedLoadingButtonController _saveBtnController =
       new RoundedLoadingButtonController();
 
@@ -40,8 +40,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     _productPrice.text = searchBarD.price;
     if (searchBarD.price != null && searchBarD.price != "") {
       changeRange(double.parse(searchBarD.price));
-    } else
-      _expectedPrice.text = "100";
+    }
   }
 
   clearFields() {
@@ -52,7 +51,6 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     });
     _productName.text = "";
     _productPrice.text = "";
-    _expectedPrice.text = "";
 
     values = RangeValues(1, 100);
     labels = RangeLabels('1', '100');
@@ -68,6 +66,23 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     double price =
         _productPrice.text != "" ? (double.parse(_productPrice.text)) : 100.0;
     return price;
+  }
+
+  void saveWish(UserInfo userInfo, SearchBarURL objSearched) async {
+    var reqBody = {
+      "userInfo": userInfo.id,
+      "masterWebsiteId": objSearched.masterWebsiteId,
+      "domainName": objSearched.domainName,
+      "websiteUrl": objSearched.productUrl,
+      "currentPrice": _productName.text,
+      "currentRating": _productPrice.text,
+      "targetPrice": [values.start.toString(), values.end.toString()]
+    };
+    print(reqBody);
+    await SearchBarURL().saveWishList(reqBody);
+    showInfo = false;
+    _saveBtnController.success();
+    clearFields();
   }
 
   @override
@@ -165,11 +180,12 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                                           .accentColor)),
                                               controller: _saveBtnController,
                                               onPressed: () {
-                                                Timer(Duration(seconds: 3), () {
-                                                  showInfo = false;
-                                                  _saveBtnController.success();
-                                                  clearFields();
-                                                });
+                                                UserInfo userIn =
+                                                    Provider.of<UserInfo>(
+                                                            context,
+                                                            listen: false)
+                                                        .getUserInfo;
+                                                saveWish(userIn, searchBarD);
                                               },
                                             ),
                                           )

@@ -3,10 +3,11 @@ import os
 from flask import Flask
 from flask import Flask, jsonify, request, Response
 from database.models.db import initialize_db
-from database.models.exportModel import masterWebsite, userInfo
+from database.models.exportModel import masterWebsite, userInfo, userWishlist
 import wishlistScript
 import firebaseNotification
 from tldextract import tldextract
+from bson import ObjectId
 
 
 app = Flask(__name__)
@@ -52,11 +53,18 @@ def get_price():
             if masterWS:
                 info = wishlistScript.startWith(masterWS, body["websiteUrl"])
                 info["statusCode"] = 1
+                info["productUrl"] = body["websiteUrl"]
+                info["masterWebsiteId"] = str(masterWS["id"])
+                info["domainName"] = str(masterWS["domainName"])
                 return info, 200
             else:
                 info["statusCode"] = 0
                 info["msg"] = "Product not supported"
                 return info, 200
+        else:
+            info["statusCode"] = 0
+            info["msg"] = "Require Url"
+            return info, 200
     except Exception as err:
         print(err)
         return {'id': err}, 500
@@ -68,7 +76,7 @@ def get_domain_obj(domainName):
         return objmasterW
     except Exception as err:
         print(err)
-        return ""
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
 @app.route('/userToken', methods=['POST'])
@@ -81,11 +89,44 @@ def update_user():
                                                                       )
         new_user and new_user._created and firebaseNotification.send_to_token(
             new_user["firebaseId"])
-        return Response(new_user.to_json(), mimetype="application/json", status=200)
+        userInfoD = {
+            "id": str(new_user.id),
+            "deviceId": new_user.deviceId,
+            "firebaseId": new_user.firebaseId,
+            "statusCode": 1
+        }
+        userInfoD = json.dumps(userInfoD)
+        return Response(userInfoD, mimetype="application/json", status=200)
     except Exception as err:
         print(err)
-        return {'id': err}, 500
+        return Response({'statusCode': "0"}, mimetype="application/json", status=500)
 
+
+@app.route('/addProduct', methods=['POST'])
+def add_product():
+    try:
+        body = request.get_json()
+        body["userInfo"] = ObjectId(body["userInfo"])
+        body["masterWebsiteId"] = ObjectId(body["masterWebsiteId"])
+
+        newUserList = userWishlist(**body).save()
+        firebaseId = newUserList.userInfo.firebaseId
+        firebaseNotification.send_to_token(firebaseId, "Your wishlist has set")
+        return Response(newUserList.to_json(), mimetype="application/json", status=200)
+    except Exception as err:
+        print(err)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
+
+
+@app.route('/getProduct', methods=['GET'])
+def get_product():
+    try:
+        user_list = userWishlist.objects.get()
+        # firebaseNotification.send_to_token(newUserList["firebaseId"])
+        return Response(user_list.to_json(), mimetype="application/json", status=200)
+    except Exception as err:
+        print(err)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 # @app.route('/movies/<id>', methods=['PUT'])
 # def update_movie(id):

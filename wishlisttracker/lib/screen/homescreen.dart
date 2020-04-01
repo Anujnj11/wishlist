@@ -15,19 +15,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DeviceInfo diObj = new DeviceInfo();
-
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) => {_setOtherUtility()});
+    // SchedulerBinding.instance.addPostFrameCallback((_) => {_setOtherUtility()});
   }
 
-  void _setOtherUtility() {
-    diObj.init();
+  void _setOtherUtility(context) {
+    diObj.init(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    _setOtherUtility(context);
     return Scaffold(
       body: Column(
         children: <Widget>[

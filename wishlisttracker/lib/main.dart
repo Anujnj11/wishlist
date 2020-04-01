@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './router.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,8 +14,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<SearchBarURL>(
-          create: (_) => SearchBarURL(),
-        )
+          create: (context) => SearchBarURL(),
+        ),
+        ChangeNotifierProvider<UserInfo>(
+          create: (context) => UserInfo(),
+        ),
       ],
       child: MaterialApp(
         title: 'Wishlist Tracker',
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color(0xFF3EBACE),
           // accentColor: Color(0xFFD8ECF1),
-          accentColor: Colors.black,//Color(4281215567),
+          accentColor: Colors.black, //Color(4281215567),
           scaffoldBackgroundColor: Color(4294440951),
 
           // Use the old theme but apply the following three changes

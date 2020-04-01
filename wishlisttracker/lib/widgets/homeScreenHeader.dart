@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlisttracker/dialogs/productUrlDialog.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/widgets/expandedSection.dart';
 import 'package:wishlisttracker/widgets/profile.dart';
 import 'package:wishlisttracker/widgets/searchBar.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class HomeScreenHeader extends StatefulWidget {
   @override
@@ -20,10 +21,12 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   var _productName = new TextEditingController();
   var _productPrice = new TextEditingController();
   var _expectedPrice = new TextEditingController();
+  final RoundedLoadingButtonController _saveBtnController =
+      new RoundedLoadingButtonController();
 
-  changeRange(SearchBarURL searchBarD) {
-    double minPrice = 0.3 * int.parse(searchBarD.price);
-    double basePrice = double.parse(searchBarD.price);
+  changeRange(double price) {
+    double minPrice = 0.3 * price;
+    double basePrice = price;
     values = RangeValues(minPrice, basePrice);
     labels =
         RangeLabels(minPrice.toInt().toString(), basePrice.toInt().toString());
@@ -35,9 +38,9 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     });
     _productName.text = searchBarD.productName;
     _productPrice.text = searchBarD.price;
-    if (searchBarD.price != null && searchBarD.price != "")
-      changeRange(searchBarD);
-    else
+    if (searchBarD.price != null && searchBarD.price != "") {
+      changeRange(double.parse(searchBarD.price));
+    } else
       _expectedPrice.text = "100";
   }
 
@@ -53,6 +56,18 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
 
     values = RangeValues(1, 100);
     labels = RangeLabels('1', '100');
+  }
+
+  double _getMinFlag() {
+    double price =
+        _productPrice.text != "" ? (0.3 * int.parse(_productPrice.text)) : 1.0;
+    return price;
+  }
+
+  double _getMaxFlag() {
+    double price =
+        _productPrice.text != "" ? (double.parse(_productPrice.text)) : 100.0;
+    return price;
   }
 
   @override
@@ -138,23 +153,24 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                               ),
                                             ),
                                           ),
-                                          ButtonTheme(
+                                          Container(
                                             height: 40.0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            child: RaisedButton(
+                                            width: 90.0,
+                                            child: RoundedLoadingButton(
                                               color: Theme.of(context)
                                                   .primaryColor,
-                                              textColor: Colors.white,
+                                              child: Text('Save',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .accentColor)),
+                                              controller: _saveBtnController,
                                               onPressed: () {
-                                                print(values.start);
-                                                print(values.end);
-                                                setState(() {
+                                                Timer(Duration(seconds: 3), () {
                                                   showInfo = false;
+                                                  _saveBtnController.success();
+                                                  clearFields();
                                                 });
                                               },
-                                              child: Text("Save"),
                                             ),
                                           )
                                         ],
@@ -203,12 +219,17 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                         Padding(
                                           padding: EdgeInsets.all(5.0),
                                           child: TextField(
-                                            readOnly: searchBarD?.price != null
+                                            readOnly: searchBarD?.price != ""
                                                 ? true
                                                 : false,
                                             controller: _productPrice,
-                                            // TextEditingController(
-                                            //     text: searchBarD?.price),
+                                            keyboardType: TextInputType.number,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                double v = double.parse(value);
+                                                changeRange(v);
+                                              });
+                                            },
                                             style: TextStyle(
                                                 height: 0.9,
                                                 color: Colors.white),
@@ -233,6 +254,11 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                                     BorderRadius.circular(10.0),
                                                 borderSide: BorderSide(),
                                               ),
+                                              hintText: searchBarD?.price != ""
+                                                  ? ""
+                                                  : "Product price",
+                                              hintStyle:
+                                                  TextStyle(color: Colors.grey),
                                               //fillColor: Colors.green
                                             ),
                                           ),
@@ -243,70 +269,39 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              if (searchBarD?.price == "")
-                                                TextField(
-                                                  controller: _expectedPrice,
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 12.0),
+                                                child: Text(
+                                                  "Expected Price",
                                                   style: TextStyle(
-                                                      height: 0.9,
-                                                      color: Colors.white),
-                                                  decoration: InputDecoration(
-                                                    labelText: "Expected Price",
-                                                    fillColor: Colors.white,
-                                                    labelStyle: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .primaryColor),
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                      borderSide: BorderSide(),
-                                                    ),
-                                                  ),
+                                                      fontSize: 16.0,
+                                                      color: Theme.of(context)
+                                                          .primaryColor),
                                                 ),
-                                              if (searchBarD?.price != "" &&
-                                                  searchBarD?.price != null)
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "Expected Price",
-                                                      style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor),
-                                                    ),
-                                                    RangeSlider(
-                                                      min: searchBarD?.price !=
-                                                              null
-                                                          ? (0.3 *
-                                                              int.parse(
-                                                                  searchBarD
-                                                                      .price))
-                                                          : 1,
-                                                      max: searchBarD?.price !=
-                                                              null
-                                                          ? (double.parse(
-                                                              searchBarD.price))
-                                                          : 100,
-                                                      values: values,
-                                                      divisions: 10,
-                                                      labels: labels,
-                                                      activeColor: Theme.of(
-                                                              context)
-                                                          .primaryColor, //Color(4281320352),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          print(value);
-                                                          values = value;
-                                                          labels = RangeLabels(
-                                                              '₹${value.start.toInt().toString()}',
-                                                              '₹${value.end.toInt().toString()}');
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                )
+                                              ),
+                                              RangeSlider(
+                                                min: _getMinFlag(),
+                                                max: _getMaxFlag(),
+                                                values: values,
+                                                onChangeStart: (value) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                },
+                                                divisions: 10,
+                                                labels: labels,
+                                                activeColor: Theme.of(context)
+                                                    .primaryColor, //Color(4281320352),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    print(value);
+                                                    values = value;
+                                                    labels = RangeLabels(
+                                                        '₹${value.start.toInt().toString()}',
+                                                        '₹${value.end.toInt().toString()}');
+                                                  });
+                                                },
+                                              ),
                                             ],
                                           ),
                                         )

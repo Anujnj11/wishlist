@@ -3,7 +3,7 @@ import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class SearchBarURL extends ChangeNotifier {
   bool _searching = false;
-  SearchBarURL _searchedUrl = new SearchBarURL();
+  SearchBarURL _searchedUrl;
 
   String id;
   String productUrl;
@@ -11,6 +11,7 @@ class SearchBarURL extends ChangeNotifier {
   String price;
   String productName;
   String rating;
+  String masterWebsiteId;
 
   SearchBarURL.initial()
       : id = "0",
@@ -18,7 +19,8 @@ class SearchBarURL extends ChangeNotifier {
         image = '',
         price = "0",
         productName = '',
-        rating = "";
+        rating = "",
+        masterWebsiteId = "";
 
   SearchBarURL(
       {this.id,
@@ -26,7 +28,8 @@ class SearchBarURL extends ChangeNotifier {
       this.productName,
       this.image,
       this.productUrl,
-      this.rating});
+      this.rating,
+      this.masterWebsiteId});
 
   bool get isSearching => _searching;
 
@@ -34,11 +37,12 @@ class SearchBarURL extends ChangeNotifier {
 
   SearchBarURL.fromJson(Map<String, dynamic> json) {
     if (json != null) {
-      productUrl = "";
+      productUrl = json['productUrl'];
       image = json['image'];
       price = json['price'];
       productName = json['productName'];
       rating = json['rating'];
+      masterWebsiteId = json['masterWebsiteId'];
     }
   }
 
@@ -56,7 +60,11 @@ class SearchBarURL extends ChangeNotifier {
     var reqBody = {"websiteUrl": productUrl};
     setSearching(true);
     var dynamicBody = await ApiCalling.postReq('getPrice', reqBody);
-    _searchedUrl = SearchBarURL.fromJson(dynamicBody);
+    if (dynamicBody != null) {
+      _searchedUrl = SearchBarURL.fromJson(dynamicBody);
+    } else {
+      _searchedUrl = new SearchBarURL();
+    }
     setSearching(false);
   }
 

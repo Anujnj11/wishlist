@@ -1,5 +1,7 @@
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:provider/provider.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
 import './apiCalling.dart';
 
 class DeviceInfo {
@@ -13,24 +15,27 @@ class DeviceInfo {
 
   PushNotificationsManager pnObj = new PushNotificationsManager();
   String deviceId;
-  Future<void> init() async {
+  Future<void> init(context) async {
     if (!_initialized) {
       deviceId = await DeviceId.getID;
       _initialized = true;
       print("Device id $deviceId");
-      getFireBaseId();
+      getFireBaseId(context);
     }
   }
 
-  getFireBaseId() async {
+  getFireBaseId(context) async {
     String firebaseId = await pnObj.init();
     pnObj.getMessage();
-    saveDeviceInfo(firebaseId);
+    saveDeviceInfo(context, firebaseId);
   }
 
-  saveDeviceInfo(firebaseId) {
-    var reqBody = {"deviceId": deviceId, "firebaseId": firebaseId};
-    ApiCalling.postReq('userToken', reqBody);
+  saveDeviceInfo(context, firebaseId) {
+    Provider.of<UserInfo>(context, listen: false)
+        .setUserInfo(deviceId, firebaseId);
+
+    // var reqBody = {"deviceId": deviceId, "firebaseId": firebaseId};
+    // ApiCalling.postReq('userToken', reqBody);
   }
 }
 

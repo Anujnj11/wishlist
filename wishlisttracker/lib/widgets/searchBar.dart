@@ -21,7 +21,6 @@ class _SearchBarState extends State<SearchBar> {
 
   setInitState() {
     _searchURL.addListener(_onSearchChanged);
-    // _searchURL.clear();
   }
 
   _onSearchChanged() {
@@ -34,12 +33,12 @@ class _SearchBarState extends State<SearchBar> {
       print(isValidUrl);
       if (isValidUrl) {
         getProductInfo(_searchURL.text);
-        // _searchURL.clear();
       }
     });
   }
 
   getProductInfo(searchURL) {
+    FocusScope.of(context).unfocus();
     Provider.of<SearchBarURL>(context, listen: false).getProductInfo(searchURL);
   }
 

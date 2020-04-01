@@ -29,6 +29,7 @@ dependencies:
   firebase_core: ^0.4.0
   device_id: ^0.2.0
   provider: ^4.0.4
+  rounded_loading_button: ^1.0.0
 
 
 

@@ -9,26 +9,26 @@ import re
 import os
 
 
-# def startWith(masterWebsite, url):
-#     chrome_options = webdriver.ChromeOptions()
-#     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-#     chrome_options.add_argument("--headless")
-#     chrome_options.add_argument("--disable-dev-shm-usage")
-#     chrome_options.add_argument("--no-sandbox")
-#     driver = webdriver.Chrome(chrome_options=chrome_options,
-#                               executable_path=os.environ.get("CHROMEDRIVER_PATH"))
-#     return process_price(driver, masterWebsite, url)
-
-
 def startWith(masterWebsite, url):
     chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--window-size=1920x1080")
-    chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
-    driver = webdriver.Chrome(
-        chrome_options=chrome_options, executable_path=chrome_driver)
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(chrome_options=chrome_options,
+                              executable_path=os.environ.get("CHROMEDRIVER_PATH"))
     return process_price(driver, masterWebsite, url)
+
+
+# def startWith(masterWebsite, url):
+#     chrome_options = webdriver.ChromeOptions()
+#     chrome_options.add_argument("--headless")
+#     chrome_options.add_argument("--disable-dev-shm-usage")
+#     # chrome_options.add_argument("--window-size=1920x1080")
+#     chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
+#     driver = webdriver.Chrome(
+#         chrome_options=chrome_options, executable_path=chrome_driver)
+#     return process_price(driver, masterWebsite, url)
 
 
 def process_price(driver, masterWebsite, url):

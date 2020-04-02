@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlisttracker/dialogs/productUrlDialog.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 
 class SearchBar extends StatefulWidget {
@@ -21,6 +20,7 @@ class _SearchBarState extends State<SearchBar> {
 
   setInitState() {
     _searchURL.addListener(_onSearchChanged);
+     _searchURL.text = "";
   }
 
   _onSearchChanged() {
@@ -40,6 +40,7 @@ class _SearchBarState extends State<SearchBar> {
   getProductInfo(searchURL) {
     FocusScope.of(context).unfocus();
     Provider.of<SearchBarURL>(context, listen: false).getProductInfo(searchURL);
+     _searchURL.text = "";
   }
 
   @override

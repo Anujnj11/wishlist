@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/products.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
+import 'package:wishlisttracker/models/wishlist.dart';
 
 class ProductList extends StatefulWidget {
   @override
@@ -7,6 +11,29 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
+  bool callAPI = true;
+  UserInfo objU;
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // getWishlist(context);
+    });
+  }
+
+  // getWishlist(context) {
+  //   var sampple = Provider.of<UserInfo>(context, listen: false).getUserInfo;
+  //   var sampple2 = Provider.of<UserInfo>(context, listen: false).objUserInfo;
+  //   print(sampple2);
+  // }
+
+  getwishList(UserInfo objU) {
+    setState(() {
+      callAPI = false;
+    });
+    Wishlist().getWishlist(objU.id);
+  }
+
   Text _buildRatingStars(int rating) {
     String stars = '';
     for (int i = 0; i < rating; i++) {
@@ -25,6 +52,12 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+    UserInfo objU = Provider.of<UserInfo>(context, listen: true).getUserInfo;
+    List<Wishlist> objW =
+        Provider.of<Wishlist>(context, listen: false).getWishList;
+    if (objU != null && callAPI) getwishList(objU);
+
+    print(objW);
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.only(top: 5.0, bottom: 15.0),

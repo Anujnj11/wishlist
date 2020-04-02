@@ -15,6 +15,7 @@ class HomeScreenHeader extends StatefulWidget {
 
 class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   bool fieldsUp = false;
+
   SearchBarURL searchBarD;
   RangeValues values = RangeValues(1, 100);
   RangeLabels labels = RangeLabels('1', '100');
@@ -70,12 +71,13 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
 
   void saveWish(UserInfo userInfo, SearchBarURL objSearched) async {
     var reqBody = {
-      "userInfo": userInfo.id,
+      "userInfoId": userInfo.id,
       "masterWebsiteId": objSearched.masterWebsiteId,
       "domainName": objSearched.domainName,
       "websiteUrl": objSearched.productUrl,
-      "currentPrice": _productName.text,
-      "currentRating": _productPrice.text,
+      "name": _productName.text,
+      "currentPrice": _productPrice.text,
+      "currentRating": objSearched.rating,
       "targetPrice": [values.start.toString(), values.end.toString()]
     };
     await SearchBarURL().saveWishList(reqBody);

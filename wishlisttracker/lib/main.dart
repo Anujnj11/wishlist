@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:wishlisttracker/screen/homescreen.dart';
 import 'package:provider/provider.dart';
+import 'package:wishlisttracker/models/wishlist.dart';
 import './router.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
@@ -13,11 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<UserInfo>(
+          create: (context) => UserInfo(),
+        ),
         ChangeNotifierProvider<SearchBarURL>(
           create: (context) => SearchBarURL(),
         ),
-        ChangeNotifierProvider<UserInfo>(
-          create: (context) => UserInfo(),
+         ChangeNotifierProvider<Wishlist>(
+          create: (context) => Wishlist(),
         ),
       ],
       child: MaterialApp(

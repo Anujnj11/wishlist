@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class UserInfo extends ChangeNotifier {
-  UserInfo _objUserInfo;
+  UserInfo objUserInfo;
 
   String deviceId;
   String firebaseId;
@@ -19,7 +19,7 @@ class UserInfo extends ChangeNotifier {
     this.id,
   });
 
-  UserInfo get getUserInfo => _objUserInfo;
+  UserInfo get getUserInfo => objUserInfo;
 
   UserInfo.fromJson(Map<String, dynamic> json) {
     if (json != null) {
@@ -33,9 +33,10 @@ class UserInfo extends ChangeNotifier {
     var reqBody = {"deviceId": deviceId, "firebaseId": firebaseId};
     var dynamicBody = await ApiCalling.postReq('userToken', reqBody);
     if (dynamicBody != null) {
-      _objUserInfo = UserInfo.fromJson(dynamicBody);
+      objUserInfo = UserInfo.fromJson(dynamicBody);
     } else {
-      _objUserInfo = new UserInfo();
+      objUserInfo = new UserInfo();
     }
+    notifyListeners();
   }
 }

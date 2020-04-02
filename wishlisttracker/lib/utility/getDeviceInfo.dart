@@ -31,9 +31,9 @@ class DeviceInfo {
   }
 
   saveDeviceInfo(context, firebaseId) {
+    // UserInfo().setUserInfo(deviceId, firebaseId);
     Provider.of<UserInfo>(context, listen: false)
         .setUserInfo(deviceId, firebaseId);
-
     // var reqBody = {"deviceId": deviceId, "firebaseId": firebaseId};
     // ApiCalling.postReq('userToken', reqBody);
   }

@@ -5,13 +5,15 @@ from .exportModel import userInfo, masterWebsite
 from mongoengine import *
 from mongoengine import signals
 import firebaseNotification
+from bson import json_util
 
 
 class userWishlist(db.Document):
-    userInfo = db.ReferenceField(userInfo, required=True)
+    userInfoId = db.ReferenceField(userInfo, required=True)
     masterWebsiteId = db.ReferenceField(masterWebsite)
     domainName = db.StringField()
     websiteUrl = db.URLField()
+    name = db.StringField()
     currentPrice = db.StringField()
     currentRating = db.StringField()
     targetPrice = db.ListField(db.StringField())
@@ -38,6 +40,11 @@ class userWishlist(db.Document):
                     print("Updated")
         except Exception as err:
             print(err)
+
+    @classmethod
+    def to_json(self):
+        data = self.to_mongo()
+        return json_util.dumps(data)
 
 
 signals.post_save.connect(userWishlist.post_save, sender=userWishlist)

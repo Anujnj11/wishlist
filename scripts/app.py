@@ -8,6 +8,7 @@ import wishlistScript
 import firebaseNotification
 from tldextract import tldextract
 from bson import ObjectId
+import re
 
 
 app = Flask(__name__)
@@ -48,12 +49,15 @@ def get_price():
     try:
         body = request.get_json()
         if body["websiteUrl"]:
-            urlS = tldextract.extract(body["websiteUrl"])
-            masterWS = get_domain_obj(urlS.domain)
+            urlS = re.findall(
+                "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", body["websiteUrl"])
+            url = urlS and len(urlS) and urlS[0]
+            url = tldextract.extract(url)
+            masterWS = get_domain_obj(url.domain)
             if masterWS:
-                info = wishlistScript.startWith(masterWS, body["websiteUrl"])
+                info = wishlistScript.startWith(masterWS, urlS[0])
                 info["statusCode"] = 1
-                info["productUrl"] = body["websiteUrl"]
+                info["productUrl"] = urlS[0]
                 info["masterWebsiteId"] = str(masterWS["id"])
                 info["domainName"] = str(masterWS["domainName"])
                 return info, 200
@@ -104,7 +108,7 @@ def update_user():
 def add_product():
     try:
         body = request.get_json()
-        body["userInfo"] = ObjectId(body["userInfo"])
+        body["userInfoId"] = ObjectId(body["userInfoId"])
         body["masterWebsiteId"] = ObjectId(body["masterWebsiteId"])
 
         newUserList = userWishlist(**body).save()
@@ -114,12 +118,13 @@ def add_product():
         return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
-@app.route('/getProduct', methods=['GET'])
+@app.route('/getProduct', methods=['POST'])
 def get_product():
     try:
-        user_list = userWishlist.objects.get()
-        # firebaseNotification.send_to_token(newUserList["firebaseId"])
-        return Response(user_list.to_json(), mimetype="application/json", status=200)
+        body = request.get_json()
+        user_wish_list = userWishlist.objects(
+            userInfoId=ObjectId(body["userInfoId"])).all()
+        return Response(user_wish_list.to_json(), mimetype="application/json", status=200)
     except Exception as err:
         print(err)
         return Response({'statusCode': 0}, mimetype="application/json", status=500)

@@ -122,9 +122,13 @@ def add_product():
 def get_product():
     try:
         body = request.get_json()
-        user_wish_list = userWishlist.objects(
-            userInfoId=ObjectId(body["userInfoId"])).all()
-        return Response(user_wish_list.to_json(), mimetype="application/json", status=200)
+        deviceId = userInfo.objects.filter(deviceId=body["deviceId"]).first()
+        if deviceId:
+            user_wish_list = userWishlist.objects(userInfoId=deviceId.id).all()
+            user_wish_list = user_wish_list.to_json()
+        else:
+            user_wish_list = []
+        return Response(user_wish_list, mimetype="application/json", status=200)
     except Exception as err:
         print(err)
         return Response({'statusCode': 0}, mimetype="application/json", status=500)

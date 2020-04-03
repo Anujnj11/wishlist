@@ -55,6 +55,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
 
     values = RangeValues(1, 100);
     labels = RangeLabels('1', '100');
+    Provider.of<SearchBarURL>(context, listen: false).resetSearchedUrl();
   }
 
   double _getMinFlag() {
@@ -78,7 +79,8 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
       "name": _productName.text,
       "currentPrice": _productPrice.text,
       "currentRating": objSearched.rating,
-      "targetPrice": [values.start.toString(), values.end.toString()]
+      "targetPrice": [values.start.toString(), values.end.toString()],
+      "scrapePrice": _productPrice.text,
     };
     await SearchBarURL().saveWishList(reqBody);
     showInfo = false;
@@ -90,7 +92,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   Widget build(BuildContext context) {
     bool isSeaching = Provider.of<SearchBarURL>(context).isSearching;
     searchBarD =
-        Provider.of<SearchBarURL>(context, listen: false).getSearchedUrl;
+        Provider.of<SearchBarURL>(context, listen: false).getSearchedUrl();
     if (searchBarD != null && !fieldsUp) updateText(searchBarD);
     return Stack(
       children: <Widget>[
@@ -103,9 +105,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                     bottomRight: Radius.circular(40)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black,
-                    // offset: Offset(0.0, 2.0),
-                    // blurRadius: 0.5,
+                    color: Theme.of(context).accentColor,
                   ),
                 ],
               ),

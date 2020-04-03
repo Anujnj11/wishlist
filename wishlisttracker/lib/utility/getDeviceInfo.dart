@@ -15,6 +15,7 @@ class DeviceInfo {
 
   PushNotificationsManager pnObj = new PushNotificationsManager();
   String deviceId;
+
   Future<void> init(context) async {
     if (!_initialized) {
       deviceId = await DeviceId.getID;
@@ -22,6 +23,10 @@ class DeviceInfo {
       print("Device id $deviceId");
       getFireBaseId(context);
     }
+  }
+
+  Future<String> getDeviceId() async{
+    return await DeviceId.getID;
   }
 
   getFireBaseId(context) async {

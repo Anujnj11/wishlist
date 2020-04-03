@@ -10,7 +10,7 @@ class SearchBarURL extends ChangeNotifier {
   String image;
   String price;
   String productName;
-  String rating;
+  dynamic rating;
   String masterWebsiteId;
   String domainName;
 
@@ -36,7 +36,9 @@ class SearchBarURL extends ChangeNotifier {
 
   bool get isSearching => _searching;
 
-  SearchBarURL get getSearchedUrl => _searchedUrl;
+  SearchBarURL getSearchedUrl() {
+    return _searchedUrl;
+  }
 
   SearchBarURL.fromJson(Map<String, dynamic> json) {
     if (json != null) {
@@ -70,6 +72,7 @@ class SearchBarURL extends ChangeNotifier {
     } else {
       _searchedUrl = new SearchBarURL();
     }
+    notifyListeners();
     setSearching(false);
   }
 

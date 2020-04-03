@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class Wishlist extends ChangeNotifier {
-  List<Wishlist> wishListObj = [];
+  List<Wishlist> wishListObj;
 
   String userInfoId;
   String masterWebsiteId;
@@ -11,6 +11,7 @@ class Wishlist extends ChangeNotifier {
   String websiteUrl;
   String name;
   String currentPrice;
+  String scrapePrice;
   String currentRating;
   List<dynamic> targetPrice;
   String targetPriceInPer;
@@ -20,6 +21,8 @@ class Wishlist extends ChangeNotifier {
   List<dynamic> notes;
   List<dynamic> negativeReview;
   List<dynamic> positiveReview;
+  int perChange;
+  
 
   Wishlist(
       {this.userInfoId,
@@ -35,6 +38,8 @@ class Wishlist extends ChangeNotifier {
       this.pushNotification,
       this.wishImages,
       this.notes,
+      this.perChange,
+      this.scrapePrice,
       this.negativeReview,
       this.positiveReview});
 
@@ -57,10 +62,16 @@ class Wishlist extends ChangeNotifier {
       notes = json["notes"];
       negativeReview = json["negativeReview"];
       positiveReview = json["positiveReview"];
+      scrapePrice = json["scrapePrice"];
+
+      double cp = double.parse(currentPrice);
+      double sp = double.parse(scrapePrice);
+      double temp = ((cp - sp) / cp) * 100;
+      perChange = temp.toInt();
     }
   }
 
-  List<Wishlist> parsePhotos(dynamic responseBody) {
+  List<Wishlist> wishListParser(dynamic responseBody) {
     // final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
     return responseBody
@@ -68,13 +79,13 @@ class Wishlist extends ChangeNotifier {
         .toList();
   }
 
-  void getWishlist(userInfoId) async {
-    var reqBody = {"userInfoId": userInfoId};
+  Future<List<Wishlist>> getWishlist(deviceId) async {
+    var reqBody = {"deviceId": deviceId};
     var dynamicBody = await ApiCalling.postReq('getProduct', reqBody);
     if (dynamicBody != null) {
-      wishListObj = parsePhotos(dynamicBody);
+      wishListObj = wishListParser(dynamicBody);
     }
-
     notifyListeners();
+    return wishListObj;
   }
 }

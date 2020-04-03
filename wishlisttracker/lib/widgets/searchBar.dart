@@ -20,7 +20,7 @@ class _SearchBarState extends State<SearchBar> {
 
   setInitState() {
     _searchURL.addListener(_onSearchChanged);
-     _searchURL.text = "";
+    _searchURL.text = "";
   }
 
   _onSearchChanged() {
@@ -32,7 +32,9 @@ class _SearchBarState extends State<SearchBar> {
           .hasMatch(_searchURL.text);
       print(isValidUrl);
       if (isValidUrl) {
-        getProductInfo(_searchURL.text);
+        String url = _searchURL.text;
+        _searchURL.text = "";
+        getProductInfo(url);
       }
     });
   }
@@ -40,7 +42,6 @@ class _SearchBarState extends State<SearchBar> {
   getProductInfo(searchURL) {
     FocusScope.of(context).unfocus();
     Provider.of<SearchBarURL>(context, listen: false).getProductInfo(searchURL);
-     _searchURL.text = "";
   }
 
   @override

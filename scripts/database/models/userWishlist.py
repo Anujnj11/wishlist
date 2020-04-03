@@ -14,6 +14,7 @@ class userWishlist(db.Document):
     domainName = db.StringField()
     websiteUrl = db.URLField()
     name = db.StringField()
+    scrapePrice = db.StringField()
     currentPrice = db.StringField()
     currentRating = db.StringField()
     targetPrice = db.ListField(db.StringField())
@@ -41,10 +42,10 @@ class userWishlist(db.Document):
         except Exception as err:
             print(err)
 
-    @classmethod
-    def to_json(self):
-        data = self.to_mongo()
-        return json_util.dumps(data)
+    # @classmethod
+    # def to_json(self):
+    #     data = self.to_mongo(self)
+    #     return json_util.dumps(data)
 
 
 signals.post_save.connect(userWishlist.post_save, sender=userWishlist)

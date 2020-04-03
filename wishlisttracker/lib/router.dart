@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/screen/homescreen.dart';
+import 'package:wishlisttracker/screen/splashScreen.dart';
 
 const String initialRoute = "/";
 
@@ -8,6 +9,8 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
+        return MaterialPageRoute(builder: (_) => SplashScreen());
+      case '/home':
         return MaterialPageRoute(builder: (_) => HomeScreen());
       // case 'login':
       //   return MaterialPageRoute(builder: (_) => LoginView());

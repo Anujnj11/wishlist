@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/utility/getDeviceInfo.dart';

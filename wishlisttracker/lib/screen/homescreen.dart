@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/widgets/productsFilter.dart';
 import 'package:flutter/material.dart';

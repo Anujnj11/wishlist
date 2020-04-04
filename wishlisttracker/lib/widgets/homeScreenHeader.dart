@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
+import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/widgets/expandedSection.dart';
 import 'package:wishlisttracker/widgets/profile.dart';
 import 'package:wishlisttracker/widgets/searchBar.dart';
@@ -63,12 +64,11 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
 
     values = RangeValues(1, 100);
     labels = RangeLabels('1', '100');
-    Provider.of<SearchBarURL>(context, listen: false).resetSearchedUrl();
   }
 
   double _getMinFlag() {
     double price =
-        _productPrice.text != "" ? (0.3 * int.parse(_productPrice.text)) : 1.0;
+        _productPrice.text != "" ? (0.5 * int.parse(_productPrice.text)) : 1.0;
     return price;
   }
 
@@ -94,6 +94,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     showInfo = false;
     _saveBtnController.success();
     clearFields();
+    Provider.of<Wishlist>(context).getWishlistProvider();
   }
 
   @override

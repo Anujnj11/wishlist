@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/utility/apiCalling.dart';
+import 'package:wishlisttracker/utility/getDeviceInfo.dart';
 
 class Wishlist extends ChangeNotifier {
-  List<Wishlist> wishListObj;
+  ValueNotifier<List<Wishlist>> wishListObj;
 
   String userInfoId;
   String masterWebsiteId;
@@ -22,7 +23,6 @@ class Wishlist extends ChangeNotifier {
   List<dynamic> negativeReview;
   List<dynamic> positiveReview;
   int perChange;
-  
 
   Wishlist(
       {this.userInfoId,
@@ -43,7 +43,8 @@ class Wishlist extends ChangeNotifier {
       this.negativeReview,
       this.positiveReview});
 
-  List<Wishlist> get getWishList => wishListObj;
+  List<Wishlist> get getWishList =>
+      wishListObj != null ? wishListObj.value : [];
 
   Wishlist.fromJson(Map<String, dynamic> json) {
     if (json != null) {
@@ -79,13 +80,15 @@ class Wishlist extends ChangeNotifier {
         .toList();
   }
 
-  Future<List<Wishlist>> getWishlist(deviceId) async {
+  void getWishlistProvider() async {
+    String deviceId = await DeviceInfo().getDeviceId();
+    print("deviceId inside product list " + deviceId);
     var reqBody = {"deviceId": deviceId};
     var dynamicBody = await ApiCalling.postReq('getProduct', reqBody);
     if (dynamicBody != null) {
-      wishListObj = wishListParser(dynamicBody);
+      List<Wishlist> tempO = wishListParser(dynamicBody);
+      wishListObj = new ValueNotifier<List<Wishlist>>(tempO);
     }
-    notifyListeners();
-    return wishListObj;
+    wishListObj.notifyListeners();
   }
 }

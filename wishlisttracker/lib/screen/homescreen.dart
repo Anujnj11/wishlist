@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
+import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/widgets/productsFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/homeScreenHeader.dart';
@@ -17,12 +17,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   StreamSubscription _intentDataStreamSubscription;
   String _sharedText;
+  List<Wishlist> objWish;
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       sharingUrl();
     });
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration(seconds: 5), getWishlist);
+    });
+  }
+
+  getWishlist() async {
+    print("Inside HomeScreen");
+    Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
   }
 
   setProductUrl(value) {
@@ -66,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    objWish = Provider.of<Wishlist>(context, listen: true).getWishList;
     if (_sharedText != "" && _sharedText != null) {
       setState(() {
         _sharedText = "";
@@ -81,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
           HomeScreenHeader(),
           SizedBox(height: 10),
           ProductsFilter(),
-          ProductList(),
+          ProductList(objWish),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/screen/homescreen.dart';
 import 'package:wishlisttracker/screen/splashScreen.dart';
+import 'package:wishlisttracker/screen/wishlistDetails.dart';
 
 const String initialRoute = "/";
 
@@ -12,6 +13,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => SplashScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => HomeScreen());
+      case '/wishlist':
+        return MaterialPageRoute(builder: (_) => WishlistDetails());
       // case 'login':
       //   return MaterialPageRoute(builder: (_) => LoginView());
       // case 'post':

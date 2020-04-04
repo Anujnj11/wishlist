@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<SearchBarURL>(
           create: (context) => SearchBarURL(),
         ),
-         ChangeNotifierProvider<Wishlist>(
+        ChangeNotifierProvider<Wishlist>(
           create: (context) => Wishlist(),
         ),
       ],
@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
           accentColor: Color(4279046163),
           // scaffoldBackgroundColor: Color(4294440951),
           scaffoldBackgroundColor: Color(4294572538),
-
 
           // Use the old theme but apply the following three changes
           textTheme: Theme.of(context).textTheme.apply(

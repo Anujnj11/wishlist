@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
               fontFamily: 'BalooThambi2',
               bodyColor: Colors.black,
               displayColor: Colors.white),
-          // scaffoldBackgroundColor: Color(4294769918),
         ),
         // home: HomeScreen(),
         initialRoute: '/',

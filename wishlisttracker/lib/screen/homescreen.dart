@@ -7,7 +7,6 @@ import 'package:wishlisttracker/widgets/productsFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/widgets/homeScreenHeader.dart';
 import 'package:wishlisttracker/widgets/productList.dart';
-import 'package:wishlisttracker/utility/getDeviceInfo.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,19 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   StreamSubscription _intentDataStreamSubscription;
-  DeviceInfo diObj = new DeviceInfo();
   String _sharedText;
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _setOtherUtility(context);
       sharingUrl();
     });
-  }
-
-  void _setOtherUtility(context) {
-    diObj.init(context);
   }
 
   setProductUrl(value) {
@@ -74,6 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_sharedText != "" && _sharedText != null) {
+      setState(() {
+        _sharedText = "";
+      });
       Provider.of<SearchBarURL>(context, listen: false)
           .getProductInfo(_sharedText);
     }

@@ -9,7 +9,7 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  var _searchURL = new TextEditingController();
+  TextEditingController _searchURL;
   Timer _debounce;
 
   @override
@@ -19,8 +19,8 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   setInitState() {
+    _searchURL = new TextEditingController();
     _searchURL.addListener(_onSearchChanged);
-    _searchURL.text = "";
   }
 
   _onSearchChanged() {
@@ -33,7 +33,7 @@ class _SearchBarState extends State<SearchBar> {
       print(isValidUrl);
       if (isValidUrl) {
         String url = _searchURL.text;
-        _searchURL.text = "";
+        _searchURL.clear();
         getProductInfo(url);
       }
     });
@@ -53,8 +53,6 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    // SearchBarURL obj = Provider.of<SearchBarURL>(context).getData;
-    // return Consumer<SearchBarURL>(builder: (context, searchBarObj, old) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -75,8 +73,6 @@ class _SearchBarState extends State<SearchBar> {
             child: Padding(
               padding: EdgeInsets.all(3),
               child: TextField(
-                // onTap: () => Provider.of<SearchBarURL>(context, listen: false)
-                //     .resetSearchedUrl(),
                 controller: _searchURL,
                 style: TextStyle(
                   fontSize: 18,

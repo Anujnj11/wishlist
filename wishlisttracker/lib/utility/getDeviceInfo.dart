@@ -25,13 +25,13 @@ class DeviceInfo {
     }
   }
 
-  Future<String> getDeviceId() async{
+  Future<String> getDeviceId() async {
     return await DeviceId.getID;
   }
 
   getFireBaseId(context) async {
     String firebaseId = await pnObj.init();
-    pnObj.getMessage();
+    // pnObj.getMessage();
     saveDeviceInfo(context, firebaseId);
   }
 
@@ -67,6 +67,7 @@ class PushNotificationsManager {
       _initialized = true;
       print("FirebaseMessaging token: $firebaseToken");
     }
+    getMessage();
     return firebaseToken;
   }
 
@@ -74,13 +75,13 @@ class PushNotificationsManager {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
       print('on message $message');
-      print(message);
+      // print(message);
     }, onResume: (Map<String, dynamic> message) async {
       print('on resume $message');
-      print(message);
+      // print(message);
     }, onLaunch: (Map<String, dynamic> message) async {
       print('on launch $message');
-      print(message);
+      // print(message);
     });
   }
 }

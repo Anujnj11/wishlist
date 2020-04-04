@@ -21,10 +21,17 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   RangeValues values = RangeValues(1, 100);
   RangeLabels labels = RangeLabels('1', '100');
   bool showInfo = true;
-  var _productName = new TextEditingController();
-  var _productPrice = new TextEditingController();
+  TextEditingController _productName;
+  TextEditingController _productPrice;
   final RoundedLoadingButtonController _saveBtnController =
       new RoundedLoadingButtonController();
+
+  @override
+  void initState() {
+    super.initState();
+    _productName = new TextEditingController();
+    _productPrice = new TextEditingController();
+  }
 
   changeRange(double price) {
     double minPrice = 0.3 * price;
@@ -51,8 +58,8 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
       fieldsUp = false;
       showInfo = true;
     });
-    _productName.text = "";
-    _productPrice.text = "";
+    _productName.clear();
+    _productPrice.clear();
 
     values = RangeValues(1, 100);
     labels = RangeLabels('1', '100');

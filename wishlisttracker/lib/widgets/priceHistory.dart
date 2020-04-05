@@ -12,6 +12,7 @@ class PriceHistoryState extends State<PriceHistory> {
   final toDate = DateTime.now();
 
   final date1 = DateTime(2020, 03, 27);
+  final date3 = DateTime(2020, 03, 27);
   final date2 = DateTime(2020, 03, 28);
 
   @override
@@ -36,6 +37,7 @@ class PriceHistoryState extends State<PriceHistory> {
               BezierLine(
                 data: [
                   DataPoint<DateTime>(value: 50, xAxis: date1),
+                  DataPoint<DateTime>(value: 80, xAxis: date3),
                   DataPoint<DateTime>(value: 70, xAxis: date2),
                 ],
               ),

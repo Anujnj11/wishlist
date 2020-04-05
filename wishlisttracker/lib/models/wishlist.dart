@@ -90,5 +90,10 @@ class Wishlist extends ChangeNotifier {
       wishListObj = new ValueNotifier<List<Wishlist>>(tempO);
     }
     wishListObj.notifyListeners();
+    notifyListeners();
+  }
+
+  void notifyWishList(){
+    notifyListeners();
   }
 }

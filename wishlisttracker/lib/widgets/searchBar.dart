@@ -84,7 +84,7 @@ class _SearchBarState extends State<SearchBar> {
                       size: 30,
                     ),
                     border: InputBorder.none,
-                    hintText: "Paste product URL",
+                    hintText: "Paste Product URL",
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey)),
               ),
             )),

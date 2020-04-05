@@ -1,8 +1,12 @@
 // import 'package:fl_chart/fl_chart.dart';
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:wishlisttracker/models/wishlistHistory.dart';
 
 class PriceHistory extends StatefulWidget {
+  final List<WishlistHistory> objWHistory;
+
+  PriceHistory(this.objWHistory);
   @override
   PriceHistoryState createState() => PriceHistoryState();
 }

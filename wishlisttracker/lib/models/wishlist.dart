@@ -6,6 +6,7 @@ import 'package:wishlisttracker/utility/getDeviceInfo.dart';
 class Wishlist extends ChangeNotifier {
   ValueNotifier<List<Wishlist>> wishListObj;
 
+  String id;
   String userInfoId;
   String masterWebsiteId;
   String domainName;
@@ -30,6 +31,7 @@ class Wishlist extends ChangeNotifier {
       this.domainName,
       this.websiteUrl,
       this.name,
+      this.id,
       this.currentPrice,
       this.currentRating,
       this.targetPrice,
@@ -48,6 +50,7 @@ class Wishlist extends ChangeNotifier {
 
   Wishlist.fromJson(Map<String, dynamic> json) {
     if (json != null) {
+      id = json["_id"]["\$oid"];
       userInfoId = json["_id"]["\$oid"];
       masterWebsiteId = json["userInfoId"]["\$oid"];
       domainName = json["masterWebsiteId"]["\$oid"];
@@ -93,7 +96,4 @@ class Wishlist extends ChangeNotifier {
     notifyListeners();
   }
 
-  void notifyWishList(){
-    notifyListeners();
-  }
 }

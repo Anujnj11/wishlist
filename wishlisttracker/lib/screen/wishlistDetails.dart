@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
+import 'package:wishlisttracker/models/wishlistHistory.dart';
 import 'package:wishlisttracker/widgets/priceHistory.dart';
 import 'package:wishlisttracker/widgets/swipeButton.dart';
 
@@ -15,17 +18,22 @@ class WishlistDetails extends StatefulWidget {
 }
 
 class WishlistDetailsState extends State<WishlistDetails> {
-  Text _buildRatingStars(int rating) {
-    String stars = '';
-    for (int i = 0; i < rating; i++) {
-      stars += '⭐ ';
-    }
-    stars.trim();
-    return Text(stars);
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => Provider.of<WishlistHistory>(context, listen: false)
+        .getWishlistHistory(widget.wishObj.id));
+  }
+
+  void getPriceHistory() {
+    String userWishId = widget.wishObj.id;
+    WishlistHistory().getWishlistHistory(userWishId);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<WishlistHistory> wishHistory =
+        Provider.of<WishlistHistory>(context, listen: false).getWishListHistory;
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -49,7 +57,7 @@ class WishlistDetailsState extends State<WishlistDetails> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[PriceHistory()],
+                  children: <Widget>[PriceHistory(wishHistory)],
                 ),
               ),
               Padding(

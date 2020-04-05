@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:wishlisttracker/screen/homescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
+import 'package:wishlisttracker/models/wishlistHistory.dart';
 import './router.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Wishlist>(
           create: (context) => Wishlist(),
+        ),
+        ChangeNotifierProvider<WishlistHistory>(
+          create: (context) => WishlistHistory(),
         ),
       ],
       child: MaterialApp(

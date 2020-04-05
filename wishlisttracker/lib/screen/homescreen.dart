@@ -24,14 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       sharingUrl();
     });
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 5), getWishlist);
-    });
-  }
 
-  getWishlist() async {
-    print("Inside HomeScreen");
-    Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
+    Future.microtask(() =>
+        Provider.of<Wishlist>(context, listen: false).getWishlistProvider());
   }
 
   setProductUrl(value) {

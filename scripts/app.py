@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask import Flask, jsonify, request, Response
 from database.models.db import initialize_db
-from database.models.exportModel import masterWebsite, userInfo, userWishlist
+from database.models.exportModel import masterWebsite, userInfo, userWishlist, scrapeWish
 import wishlistScript
 import firebaseNotification
 from tldextract import tldextract
@@ -139,6 +139,19 @@ def scrape_User_wish():
     try:
         userWishScrape.get_active_wish()
         return Response({"statusCode": 1}, mimetype="application/json", status=200)
+    except Exception as err:
+        print(err)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
+
+
+@app.route('/getWishHistory', methods=['POST'])
+def get_wish_history():
+    try:
+        body = request.get_json()
+        wish_list_history = scrapeWish.objects.filter(
+            userWishlistId=ObjectId(body["userWishlistId"])).all()
+        wish_list_history = wish_list_history.to_json()
+        return Response(wish_list_history, mimetype="application/json", status=200)
     except Exception as err:
         print(err)
         return Response({'statusCode': 0}, mimetype="application/json", status=500)

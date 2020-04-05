@@ -9,7 +9,7 @@ import firebaseNotification
 from tldextract import tldextract
 from bson import ObjectId
 import re
-
+import userWishScrape
 
 app = Flask(__name__)
 app.config['DEBUG'] = False
@@ -129,6 +129,16 @@ def get_product():
         else:
             user_wish_list = []
         return Response(user_wish_list, mimetype="application/json", status=200)
+    except Exception as err:
+        print(err)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
+
+
+@app.route('/scrapeUserWish', methods=['GET'])
+def scrape_User_wish():
+    try:
+        userWishScrape.get_active_wish()
+        return Response({"statusCode": 1}, mimetype="application/json", status=200)
     except Exception as err:
         print(err)
         return Response({'statusCode': 0}, mimetype="application/json", status=500)

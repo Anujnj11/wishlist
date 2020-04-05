@@ -25,7 +25,7 @@ class userWishlist(db.Document):
     notes = db.StringField()
     negativeReview = db.ListField(db.StringField())
     positiveReview = db.ListField(db.StringField())
-    isActive = db.BooleanField()
+    isActive = db.BooleanField(default=True)
     createdAt = db.DateTimeField(default=datetime.now())
 
     @classmethod

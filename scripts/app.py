@@ -7,7 +7,7 @@ from database.models.exportModel import masterWebsite, userInfo, userWishlist, s
 import wishlistScript
 import firebaseNotification
 from tldextract import tldextract
-from bson import ObjectId
+from bson import ObjectId, json_util
 import re
 import userWishScrape
 
@@ -148,9 +148,16 @@ def scrape_User_wish():
 def get_wish_history():
     try:
         body = request.get_json()
-        wish_list_history = scrapeWish.objects.filter(
-            userWishlistId=ObjectId(body["userWishlistId"])).all()
-        wish_list_history = wish_list_history.to_json()
+        pipeline = [
+            {'$match': {'userWishlistId': ObjectId(body["userWishlistId"])}},
+            {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$createdAt'}},
+                        'minPrice': {'$min': '$scrapePrice'}, 'doc': {'$first': '$$ROOT'}}},
+            {'$replaceRoot': {'newRoot': '$doc'}},
+            {'$sort': {'createdAt': 1}}
+        ]
+        wish_list_history = list(scrapeWish.objects().aggregate(pipeline))
+        wish_list_history = json.dumps(
+            wish_list_history, default=json_util.default)
         return Response(wish_list_history, mimetype="application/json", status=200)
     except Exception as err:
         print(err)

@@ -44,4 +44,12 @@ class scrapeWish(db.Document):
     #     return json_util.dumps(data)
 
 
+    # class JSONEncoder(json.JSONEncoder):
+    # @classmethod
+    # def JSONEncoder(self, o):
+    #     if isinstance(o, ObjectId):
+    #         return str(o)
+    #     return json.JSONEncoder.default(self, o)
+
+
 signals.post_save.connect(scrapeWish.post_save, sender=scrapeWish)

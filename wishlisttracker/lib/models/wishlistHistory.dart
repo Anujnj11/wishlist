@@ -43,7 +43,7 @@ class WishlistHistory extends ChangeNotifier {
       scrapePositiveReview = json["scrapePositiveReview"];
       scrapePrice = json["scrapePrice"];
       createdAt =
-          new DateTime.fromMicrosecondsSinceEpoch(json["createdAt"]["\$date"]);
+          DateTime.fromMillisecondsSinceEpoch(json["createdAt"]["\$date"]);
     }
   }
 
@@ -62,6 +62,13 @@ class WishlistHistory extends ChangeNotifier {
       List<WishlistHistory> tempO0 = wishListParser(dynamicBody);
       wishListHistoryObj = new ValueNotifier<List<WishlistHistory>>(tempO0);
     }
+    wishListHistoryObj.notifyListeners();
+    notifyListeners();
+    print("Got history");
+  }
+
+  void resetWishlistHistory() {
+    wishListHistoryObj = null;
     wishListHistoryObj.notifyListeners();
     notifyListeners();
   }

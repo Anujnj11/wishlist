@@ -1,23 +1,50 @@
 // import 'package:fl_chart/fl_chart.dart';
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/wishlistHistory.dart';
 
 class PriceHistory extends StatefulWidget {
-  final List<WishlistHistory> objWHistory;
+  final List<WishlistHistory> objWishlist;
 
-  PriceHistory(this.objWHistory);
+  PriceHistory(this.objWishlist);
   @override
   PriceHistoryState createState() => PriceHistoryState();
 }
 
 class PriceHistoryState extends State<PriceHistory> {
-  final fromDate = DateTime(2020, 03, 27);
-  final toDate = DateTime.now();
+  List<DataPoint<DateTime>> getGraphDate() {
+    List<DataPoint<DateTime>> dates = [];
+    if (widget.objWishlist.length > 0) {
+      for (var i = 0; i < widget.objWishlist.length; i++) {
+        WishlistHistory obj = widget.objWishlist[i];
+        double price = double.tryParse(obj.scrapePrice);
+        price = price != null ? price : 0.0;
+        dates.add(DataPoint<DateTime>(value: price, xAxis: obj.createdAt));
+      }
+    }
+    return dates;
+  }
 
-  final date1 = DateTime(2020, 03, 27);
-  final date3 = DateTime(2020, 03, 27);
-  final date2 = DateTime(2020, 03, 28);
+  DateTime getfromDate() {
+    DateTime fromDate = DateTime.now();
+    if (widget.objWishlist.length > 0)
+      fromDate = widget.objWishlist.first.createdAt;
+    return fromDate;
+  }
+
+  DateTime gettoDate() {
+    DateTime toDate = DateTime.now();
+    if (widget.objWishlist.length > 0)
+      toDate = widget.objWishlist.last.createdAt;
+    return toDate;
+  }
+
+  @override
+  void dispose() {
+    Provider.of<WishlistHistory>(context, listen: false).resetWishlistHistory();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +62,11 @@ class PriceHistoryState extends State<PriceHistory> {
               EdgeInsets.only(right: 18.0, left: 12.0, top: 24, bottom: 12),
           child: BezierChart(
             bezierChartScale: BezierChartScale.WEEKLY,
-            fromDate: fromDate,
-            toDate: toDate,
+            fromDate: getfromDate(),
+            toDate: gettoDate(),
             series: [
               BezierLine(
-                data: [
-                  DataPoint<DateTime>(value: 50, xAxis: date1),
-                  DataPoint<DateTime>(value: 80, xAxis: date3),
-                  DataPoint<DateTime>(value: 70, xAxis: date2),
-                ],
+                data: getGraphDate(),
               ),
             ],
             config: BezierChartConfig(
@@ -52,9 +75,7 @@ class PriceHistoryState extends State<PriceHistory> {
               snap: true,
               displayYAxis: true,
               showDataPoints: true,
-              stepsYAxis: 5,
               contentWidth: MediaQuery.of(context).size.width * 2,
-              startYAxisFromNonZeroValue: true,
             ),
           ),
         ),

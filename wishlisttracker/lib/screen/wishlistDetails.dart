@@ -33,7 +33,7 @@ class WishlistDetailsState extends State<WishlistDetails> {
   @override
   Widget build(BuildContext context) {
     List<WishlistHistory> wishHistory =
-        Provider.of<WishlistHistory>(context, listen: false).getWishListHistory;
+        Provider.of<WishlistHistory>(context, listen: true).getWishListHistory;
     return Scaffold(
       body: Column(
         children: <Widget>[

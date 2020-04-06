@@ -101,7 +101,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   Widget build(BuildContext context) {
     bool isSeaching = Provider.of<SearchBarURL>(context).isSearching;
     searchBarD =
-        Provider.of<SearchBarURL>(context, listen: false).getSearchedUrl();
+        Provider.of<SearchBarURL>(context, listen: true).getSearchedUrl();
     if (searchBarD != null && !fieldsUp) updateText(searchBarD);
     return Stack(
       children: <Widget>[

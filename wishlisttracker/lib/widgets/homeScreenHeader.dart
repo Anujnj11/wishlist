@@ -10,6 +10,8 @@ import 'package:wishlisttracker/widgets/profile.dart';
 import 'package:wishlisttracker/widgets/searchBar.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import 'howTo.dart';
+
 class HomeScreenHeader extends StatefulWidget {
   @override
   _HomeScreenHeaderState createState() => _HomeScreenHeaderState();
@@ -19,11 +21,12 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   bool fieldsUp = false;
 
   SearchBarURL searchBarD;
-  RangeValues values = RangeValues(1, 100);
-  RangeLabels labels = RangeLabels('1', '100');
+  RangeValues values; //= RangeValues(1, 100);
+  RangeLabels labels; //= RangeLabels('1', '100');
   bool showInfo = true;
   TextEditingController _productName;
   TextEditingController _productPrice;
+  double masterBasePer = 0.5;
   final RoundedLoadingButtonController _saveBtnController =
       new RoundedLoadingButtonController();
 
@@ -32,10 +35,12 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     super.initState();
     _productName = new TextEditingController();
     _productPrice = new TextEditingController();
+    values = RangeValues(1, 100);
+    labels = RangeLabels('1', '100');
   }
 
   changeRange(double price) {
-    double minPrice = 0.3 * price;
+    double minPrice = masterBasePer * price;
     double basePrice = price;
     values = RangeValues(minPrice, basePrice);
     labels =
@@ -43,14 +48,14 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   }
 
   updateText(SearchBarURL searchBarD) {
-    setState(() {
-      fieldsUp = true;
-    });
     _productName.text = searchBarD.productName;
     _productPrice.text = searchBarD.price;
     if (searchBarD.price != null && searchBarD.price != "") {
       changeRange(double.parse(searchBarD.price));
     }
+    setState(() {
+      fieldsUp = true;
+    });
   }
 
   clearFields() {
@@ -68,7 +73,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
 
   double _getMinFlag() {
     double price =
-        _productPrice.text != "" ? (0.5 * int.parse(_productPrice.text)) : 1.0;
+        _productPrice.text != "" ? (masterBasePer * int.parse(_productPrice.text)) : 1.0;
     return price;
   }
 
@@ -129,7 +134,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[Profile()],
+                        children: <Widget>[HowTo(),Profile()],
                       ),
                       if (!fieldsUp)
                         Padding(

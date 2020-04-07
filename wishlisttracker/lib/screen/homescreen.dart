@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      print("Getting url");
       sharingUrl();
     });
 
@@ -68,13 +69,19 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  setTextEmpty() {
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _sharedText = "";
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     objWish = Provider.of<Wishlist>(context, listen: true).getWishList;
     if (_sharedText != "" && _sharedText != null) {
-      setState(() {
-        _sharedText = "";
-      });
+      setTextEmpty();
       Provider.of<SearchBarURL>(context, listen: false)
           .getProductInfo(_sharedText);
     }

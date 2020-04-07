@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wishlisttracker/screen/homescreen.dart';
+import 'package:wishlisttracker/screen/howToInfo.dart';
 import 'package:wishlisttracker/screen/splashScreen.dart';
 import 'package:wishlisttracker/screen/wishlistDetails.dart';
 
@@ -15,6 +16,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case '/wishlist':
         return MaterialPageRoute(builder: (_) => WishlistDetails());
+      case '/howToInfo':
+        return MaterialPageRoute(builder: (_) => HowToInfo());
       // case 'login':
       //   return MaterialPageRoute(builder: (_) => LoginView());
       // case 'post':

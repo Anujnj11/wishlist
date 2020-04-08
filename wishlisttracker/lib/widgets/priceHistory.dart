@@ -2,12 +2,14 @@
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/models/wishlistHistory.dart';
 
 class PriceHistory extends StatefulWidget {
   final List<WishlistHistory> objWishlist;
+  final Wishlist wishObj;
 
-  PriceHistory(this.objWishlist);
+  PriceHistory(this.wishObj, this.objWishlist);
   @override
   PriceHistoryState createState() => PriceHistoryState();
 }
@@ -27,6 +29,9 @@ class PriceHistoryState extends State<PriceHistory> {
         price = price != null ? price : 0.0;
         dates.add(DataPoint<DateTime>(value: price, xAxis: obj.createdAt));
       }
+    } else {
+      double price = double.tryParse(widget.wishObj.scrapePrice);
+      dates.add(DataPoint<DateTime>(value: price, xAxis: DateTime.now()));
     }
     return dates;
   }
@@ -47,7 +52,7 @@ class PriceHistoryState extends State<PriceHistory> {
 
   @override
   void dispose() {
-    Provider.of<WishlistHistory>(context, listen: false).resetWishlistHistory();
+    // Provider.of<WishlistHistory>(context, listen: false).resetWishlistHistory();
     super.dispose();
   }
 
@@ -80,7 +85,6 @@ class PriceHistoryState extends State<PriceHistory> {
               snap: true,
               displayYAxis: true,
               showDataPoints: true,
-              contentWidth: MediaQuery.of(context).size.width * 2,
             ),
           ),
         ),

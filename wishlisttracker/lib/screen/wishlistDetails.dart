@@ -57,7 +57,7 @@ class WishlistDetailsState extends State<WishlistDetails> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[PriceHistory(wishHistory)],
+                  children: <Widget>[PriceHistory(widget.wishObj,wishHistory)],
                 ),
               ),
               Padding(

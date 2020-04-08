@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wishlisttracker/animation/fadeIn.dart';
-import 'package:wishlisttracker/models/products.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/screen/wishlistDetails.dart';
 
@@ -31,7 +30,7 @@ class WishListWState extends State<WishListW> {
 
   @override
   Widget build(BuildContext context) {
-    List<Wishlist> objWish = widget.objWish;
+    List<Wishlist> objWish = widget.objWish != null ? widget.objWish : new List<Wishlist>();
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.only(top: 5.0, bottom: 15.0),

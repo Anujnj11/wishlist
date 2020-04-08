@@ -8,6 +8,11 @@ class ProductsFilter extends StatefulWidget {
 
 class _ProductsFilterState extends State<ProductsFilter> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Row(

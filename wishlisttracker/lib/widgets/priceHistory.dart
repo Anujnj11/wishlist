@@ -13,6 +13,11 @@ class PriceHistory extends StatefulWidget {
 }
 
 class PriceHistoryState extends State<PriceHistory> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   List<DataPoint<DateTime>> getGraphDate() {
     List<DataPoint<DateTime>> dates = [];
     if (widget.objWishlist.length > 0) {

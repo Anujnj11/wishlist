@@ -3,6 +3,7 @@ import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class UserInfo extends ChangeNotifier {
   UserInfo objUserInfo;
+  bool _showHow = false;
 
   String deviceId;
   String firebaseId;
@@ -21,6 +22,8 @@ class UserInfo extends ChangeNotifier {
 
   UserInfo get getUserInfo => objUserInfo;
 
+  bool get getshowHow => _showHow;
+
   UserInfo.fromJson(Map<String, dynamic> json) {
     if (json != null) {
       deviceId = json['deviceId'];
@@ -37,6 +40,11 @@ class UserInfo extends ChangeNotifier {
     } else {
       objUserInfo = new UserInfo();
     }
+    notifyListeners();
+  }
+
+  void showHow(bool shouldShow) {
+    _showHow = shouldShow;
     notifyListeners();
   }
 }

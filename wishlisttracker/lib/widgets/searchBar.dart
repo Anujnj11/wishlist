@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
 
 class SearchBar extends StatefulWidget {
   @override
@@ -73,6 +74,9 @@ class _SearchBarState extends State<SearchBar> {
             child: Padding(
               padding: EdgeInsets.all(3),
               child: TextField(
+                onTap: () {
+                  Provider.of<UserInfo>(context, listen: false).showHow(false);
+                },
                 controller: _searchURL,
                 style: TextStyle(
                   fontSize: 18,

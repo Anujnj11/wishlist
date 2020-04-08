@@ -327,7 +327,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                                     FocusScope.of(context)
                                                         .unfocus();
                                                   },
-                                                  divisions: 10,
+                                                  divisions: 20,
                                                   labels: labels,
                                                   activeColor: Theme.of(context)
                                                       .primaryColor, //Color(4281320352),

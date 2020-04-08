@@ -51,7 +51,7 @@ flutter_icons:
   ios: false
   android: true
   # image_path_ios: "assets/launcher/icon.png"
-  image_path_android: "assets/priceSlash.png"
+  image_path: "assets/priceSlash.png"
   # adaptive_icon_background: "assets/launcher/background.png"
   # adaptive_icon_foreground: "assets/launcher/foreground.png"
 

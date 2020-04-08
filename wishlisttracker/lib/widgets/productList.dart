@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
+import 'package:wishlisttracker/screen/howToInfo.dart';
 import 'package:wishlisttracker/widgets/wishListW.dart';
 
 class ProductList extends StatefulWidget {
@@ -24,9 +25,14 @@ class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     List<Wishlist> pWish = widget.objWish;
-    return pWish == null || pWish.length == 0
-        ? emptyWisList()
-        : WishListW(pWish);
+    bool showHow = Provider.of<UserInfo>(context, listen: true).getshowHow;
+    if (showHow) {
+      return HowToInfo();
+    } else if (pWish == null || pWish.length == 0) {
+      return emptyWisList();
+    } else {
+      return WishListW(pWish);
+    }
   }
 
   Widget emptyWisList() {

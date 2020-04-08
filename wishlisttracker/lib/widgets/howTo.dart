@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:wishlisttracker/screen/howToInfo.dart';
+import 'package:provider/provider.dart';
+import 'package:wishlisttracker/models/userInfo.dart';
+// import 'package:wishlisttracker/screen/howToInfo.dart';
 
 class HowTo extends StatefulWidget {
   @override
@@ -20,8 +22,9 @@ class _HowToState extends State<HowTo> {
           width: 42.0,
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => HowToInfo()));
+              Provider.of<UserInfo>(context,listen: false).showHow(true);
+              // Navigator.of(context).pushReplacement(MaterialPageRoute(
+              //     builder: (BuildContext context) => HowToInfo()));
             },
             child: Container(
               decoration: BoxDecoration(

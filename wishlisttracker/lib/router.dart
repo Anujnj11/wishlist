@@ -16,8 +16,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case '/wishlist':
         return MaterialPageRoute(builder: (_) => WishlistDetails());
-      case '/howToInfo':
-        return MaterialPageRoute(builder: (_) => HowToInfo());
+      // case '/howToInfo':
+      //   return MaterialPageRoute(builder: (_) => HowToInfo());
       // case 'login':
       //   return MaterialPageRoute(builder: (_) => LoginView());
       // case 'post':

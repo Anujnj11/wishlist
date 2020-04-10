@@ -20,7 +20,7 @@ class userWishlist(db.Document):
     targetPrice = db.ListField(db.StringField())
     targetPriceInPer = db.StringField()
     validTillDate = db.DateTimeField(default=datetime.now())
-    pushNotification = db.BooleanField()
+    pushNotification = db.BooleanField(default=True)
     wishImages = db.ListField(db.URLField())
     notes = db.StringField()
     negativeReview = db.ListField(db.StringField())

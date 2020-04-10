@@ -54,24 +54,25 @@ def get_price():
             url = urlS and len(urlS) and urlS[0]
             url = tldextract.extract(url)
             masterWS = get_domain_obj(url.domain)
+            info = {}
             if masterWS:
                 info = wishlistScript.startWith(masterWS, urlS[0])
                 info["statusCode"] = 1
                 info["productUrl"] = urlS[0]
                 info["masterWebsiteId"] = str(masterWS["id"])
                 info["domainName"] = str(masterWS["domainName"])
-                return info, 200
+                return info
             else:
                 info["statusCode"] = 0
                 info["msg"] = "Product not supported"
-                return info, 200
+                return info
         else:
             info["statusCode"] = 0
             info["msg"] = "Require Url"
-            return info, 200
+            return info
     except Exception as err:
         print(err)
-        return {'id': err}, 500
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
 def get_domain_obj(domainName):
@@ -101,7 +102,7 @@ def update_user():
         return Response(userInfoD, mimetype="application/json", status=200)
     except Exception as err:
         print(err)
-        return Response({'statusCode': "0"}, mimetype="application/json", status=500)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
 @app.route('/addProduct', methods=['POST'])
@@ -118,13 +119,35 @@ def add_product():
         return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
+@app.route('/updateProduct', methods=['POST'])
+def update_product():
+    try:
+        body = request.get_json()
+        update_product = userWishlist.objects(id=ObjectId(body["id"])).modify(upsert=True, new=False,
+                                                                              set__name=body["name"],
+                                                                              set__targetPrice=body["targetPrice"],
+                                                                              set__currentPrice=body["currentPrice"],
+                                                                              set__isActive=body["isActive"],
+                                                                              set__pushNotification=body["pushNotification"]
+                                                                              )
+        if update_product:
+            update_product = {"statusCode": 1}
+
+        update_product = json.dumps(update_product)
+        return Response(update_product, mimetype="application/json", status=200)
+    except Exception as err:
+        print(err)
+        return Response({'statusCode': 0}, mimetype="application/json", status=500)
+
+
 @app.route('/getProduct', methods=['POST'])
 def get_product():
     try:
         body = request.get_json()
         deviceId = userInfo.objects.filter(deviceId=body["deviceId"]).first()
         if deviceId:
-            user_wish_list = userWishlist.objects(userInfoId=deviceId.id).all()
+            user_wish_list = userWishlist.objects(
+                userInfoId=deviceId.id, isActive=True).all()
             user_wish_list = user_wish_list.to_json()
         else:
             user_wish_list = []

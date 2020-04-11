@@ -22,26 +22,29 @@ class _HowToState extends State<HowTo> {
           width: 42.0,
           child: GestureDetector(
             onTap: () {
-              Provider.of<UserInfo>(context,listen: false).showHow(true);
-              // Navigator.of(context).pushReplacement(MaterialPageRoute(
-              //     builder: (BuildContext context) => HowToInfo()));
+              Provider.of<UserInfo>(context, listen: false).showHow(true);
             },
             child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  style: BorderStyle.solid,
-                  width: 2.0,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    style: BorderStyle.solid,
+                    width: 1.0,
+                  ),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Icon(
-                FontAwesomeIcons.question,
-                color: Colors.white,
-                size: 18.0,
-              ),
-            ),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  child: Image.asset('assets/qu.png'),
+                )
+                // Icon(
+                // FontAwesomeIcons.question,
+                // color: Colors.white,
+                // size: 18.0,
+                // ),
+                ),
           ),
         ));
   }

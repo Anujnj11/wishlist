@@ -24,10 +24,35 @@ class WishListWState extends State<WishListW> {
   }
 
   setActionList() {
-    actionList.add({"title": "Edit"});
-    actionList.add({"title": "Delete"});
-    actionList.add({"title": "Share"});
-    actionList.add({"title": "Change Notification"});
+    actionList
+        .add({"action": "EDIT", "title": "Edit wish", "icon": Icons.edit});
+    actionList.add({
+      "action": "DELETE",
+      "title": "Delete wish",
+      "meta": "Are you sure want to delete wish?",
+      "icon": Icons.delete_outline
+    });
+    // actionList.add(
+    //     {"action": "SHARE", "title": "Share with others", "icon": Icons.share});
+    // actionList.add({
+    //   "action": "NOTI",
+    //   "title": "Change Notification",
+    //   "icon": Icons.notifications_active
+    // });
+  }
+
+  deleteUserWish(Wishlist obj) async {
+    var reqBody = {
+      "userInfoId": obj.userInfoId,
+      "id": obj.id,
+      "currentPrice": obj.scrapePrice,
+      "name": obj.name,
+      "targetPrice": obj.targetPrice,
+      "isActive": false,
+      "pushNotification": false,
+    };
+    await SearchBarURL().updateWish(reqBody);
+    Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
   }
 
   editUserWish(Wishlist obj) {
@@ -42,27 +67,100 @@ class WishListWState extends State<WishListW> {
     Provider.of<SearchBarURL>(context, listen: false).editWish(objSeach);
   }
 
+  AlertDialog editAlert(actionObj, Wishlist obj) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      contentPadding: EdgeInsets.only(top: 10.0),
+      title: Text(
+        actionObj["action"] + " WISH",
+        style: TextStyle(fontSize: 18.0),
+      ),
+      titlePadding: EdgeInsets.all(10.0),
+      content: Container(
+        padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+        child: Text(actionObj["meta"],
+            style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500)),
+      ),
+      actions: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                child: Text("Yes"),
+                onPressed: () {
+                  deleteUserWish(obj);
+                  Navigator.pop(context);
+                },
+                textColor: Theme.of(context).accentColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _modalBottomSheetMenu(actionObj, Wishlist obj) {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
-        print(actionObj["title"]);
-        editUserWish(obj);
+        String actionType = actionObj["action"];
+        switch (actionType) {
+          case "EDIT":
+            editUserWish(obj);
+            break;
+          case "DELETE":
+          case "NOTI":
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return editAlert(actionObj, obj);
+              },
+            );
+            break;
+          default:
+            print("Noting");
+        }
       },
       child: Container(
         child: Padding(
-          padding: EdgeInsets.only(bottom: 5.0),
-          child: Container(
-            height: 50.0,
-            decoration: new BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              color: Theme.of(context).scaffoldBackgroundColor,
-            ),
-            child: Center(
-              child: Text(actionObj["title"],
-                  style:
-                      TextStyle(fontSize: 22.0, fontWeight: FontWeight.w500)),
-            ),
+          padding: EdgeInsets.fromLTRB(5.0, 20.0, 0.0, 0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Icon(
+                  actionObj["icon"],
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              ),
+              Text(actionObj["title"],
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).scaffoldBackgroundColor))
+            ],
           ),
         ),
       ),
@@ -70,14 +168,46 @@ class WishListWState extends State<WishListW> {
   }
 
   Text _buildRatingStars(String rating) {
-    double r = double.parse(rating);
-    int rr = r.toInt();
-    String stars = '';
-    for (int i = 0; i < rr; i++) {
-      stars += '⭐ ';
-    }
-    stars.trim();
-    return Text(stars);
+    return Text(
+      "⭐ " + rating,
+      style: TextStyle(fontSize: 18.0, color: Colors.grey),
+    );
+  }
+
+  Widget _trackNotification(dynamic trackPrice) {
+    double priceStart = double.parse(trackPrice[0]);
+    double priceEnd = double.parse(trackPrice[1]);
+    int pS = priceStart.toInt();
+    int pE = priceEnd.toInt();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 3.0),
+          child: Icon(
+            FontAwesomeIcons.bell,
+            size: 16.0,
+            color: Colors.grey,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 1.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                "₹ " + pS.toString(),
+                style: TextStyle(fontSize: 17.0),
+              ),
+              Text(" - "),
+              Text(
+                "₹ " + pE.toString(),
+                style: TextStyle(fontSize: 17.0),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 
   @override
@@ -161,7 +291,16 @@ class WishListWState extends State<WishListW> {
                                       ),
                                     ],
                                   ),
-                                  _buildRatingStars(objW.currentRating),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      _trackNotification(objW.targetPrice),
+                                      _buildRatingStars(objW.currentRating),
+                                    ],
+                                  )
                                 ],
                               )),
                           GestureDetector(
@@ -177,8 +316,14 @@ class WishListWState extends State<WishListW> {
                                     context: context,
                                     builder: (builder) {
                                       return Container(
-                                          height: 250.0,
-                                          color: Colors.transparent,
+                                          height: 125.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15.0),
+                                                topLeft: Radius.circular(15.0)),
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
                                           child: ListView.builder(
                                               itemCount: actionList.length,
                                               itemBuilder: (context, index) {
@@ -212,40 +357,50 @@ class WishListWState extends State<WishListW> {
                     left: 25.0,
                     top: 10.0,
                     bottom: 10.0,
-                    child: Container(
-                      width: 100,
-                      height: 90,
-                      padding: EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor, // border color
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                            topLeft: Radius.circular(25)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '${objW.perChange}%',
-                            style: TextStyle(
-                              fontSize: 29.0,
-                              fontWeight: FontWeight.w500,
-                              color: objW.perChange > 0
-                                  ? Color(4281320352)
-                                  : Color(4294605964),
-                            ),
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => WishlistDetails(
+                            wishObj: objW,
                           ),
-                          Text(
-                            objW.perChange > 0 ? "Price down" : "Price up",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
+                        ),
+                      ),
+                      child: Container(
+                        width: 100,
+                        height: 90,
+                        padding: EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).accentColor, // border color
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                              topLeft: Radius.circular(25)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              '${objW.perChange}%',
+                              style: TextStyle(
+                                fontSize: 29.0,
+                                fontWeight: FontWeight.w500,
+                                color: objW.perChange > 0
+                                    ? Color(4281320352)
+                                    : Color(4294605964),
+                              ),
                             ),
-                          )
-                        ],
+                            Text(
+                              objW.perChange > 0 ? "Price down" : "Price up",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

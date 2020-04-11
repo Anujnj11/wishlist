@@ -31,7 +31,7 @@ def startWith(masterWebsite, url):
     # chrome_driver = '.chromedriver_linux1'
 
     # driver = webdriver.Chrome(
-    #     chrome_options=chrome_options, executable_path=chrome_driver)
+    # chrome_options=chrome_options, executable_path=chrome_driver)
     driver = webdriver.Chrome(
         executable_path='/usr/bin/chromedriver', options=chrome_options)
 

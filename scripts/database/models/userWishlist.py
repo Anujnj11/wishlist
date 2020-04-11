@@ -34,7 +34,7 @@ class userWishlist(db.Document):
             if 'created' in kwargs:
                 if kwargs['created']:
                     print("Created")
-                    firebaseId = document.userInfo.firebaseId
+                    firebaseId = document.userInfoId.firebaseId
                     firebaseNotification.send_to_token(
                         firebaseId, "Done !", "Your wishlist has set")
                 else:

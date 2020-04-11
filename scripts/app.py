@@ -10,6 +10,7 @@ from tldextract import tldextract
 from bson import ObjectId, json_util
 import re
 import userWishScrape
+import scheduler
 
 app = Flask(__name__)
 app.config['DEBUG'] = False

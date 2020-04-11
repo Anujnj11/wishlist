@@ -43,7 +43,6 @@ class scrapeWish(db.Document):
     #     data = self.to_mongo(self)
     #     return json_util.dumps(data)
 
-
     # class JSONEncoder(json.JSONEncoder):
     # @classmethod
     # def JSONEncoder(self, o):

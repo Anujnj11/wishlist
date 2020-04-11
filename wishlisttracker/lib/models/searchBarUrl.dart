@@ -13,6 +13,10 @@ class SearchBarURL extends ChangeNotifier {
   dynamic rating;
   String masterWebsiteId;
   String domainName;
+  List<dynamic> targetPrice;
+  int validTillDate;
+  bool isActive;
+  bool pushNotification;
 
   SearchBarURL.initial()
       : id = "0",
@@ -22,7 +26,11 @@ class SearchBarURL extends ChangeNotifier {
         productName = '',
         rating = "",
         domainName = "",
-        masterWebsiteId = "";
+        masterWebsiteId = "",
+        targetPrice = [],
+        isActive = true,
+        pushNotification = true,
+        validTillDate = 0;
 
   SearchBarURL(
       {this.id,
@@ -32,7 +40,10 @@ class SearchBarURL extends ChangeNotifier {
       this.productUrl,
       this.rating,
       this.domainName,
-      this.masterWebsiteId});
+      this.masterWebsiteId,
+      this.isActive,
+      this.pushNotification,
+      this.targetPrice});
 
   bool get isSearching => _searching;
 
@@ -90,6 +101,18 @@ class SearchBarURL extends ChangeNotifier {
   Future<bool> saveWishList(reqBody) async {
     bool status = false;
     var dynamicBody = await ApiCalling.postReq('addProduct', reqBody);
+    if (dynamicBody != null) status = true;
+    return status;
+  }
+
+  void editWish(SearchBarURL wishObj) {
+    _searchedUrl = wishObj;
+    notifyListeners();
+  }
+
+  Future<bool> updateWish(reqBody) async {
+    bool status = false;
+    var dynamicBody = await ApiCalling.postReq('updateProduct', reqBody);
     if (dynamicBody != null) status = true;
     return status;
   }

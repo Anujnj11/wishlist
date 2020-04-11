@@ -40,6 +40,9 @@ class PriceHistoryState extends State<PriceHistory> {
     DateTime fromDate = DateTime.now();
     if (widget.objWishlist.length > 0)
       fromDate = widget.objWishlist.first.createdAt;
+    //Handling this way since chart fromdate should not be same as todate
+    if (widget.objWishlist.length == 1)
+      fromDate = fromDate.subtract(Duration(minutes: 1, seconds: 0));
     return fromDate;
   }
 

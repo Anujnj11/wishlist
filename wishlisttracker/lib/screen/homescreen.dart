@@ -21,10 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      print("Getting url");
-      sharingUrl();
-    });
+    // Future.delayed(duration)
+    sharingUrl();
 
     Future.microtask(() =>
         Provider.of<Wishlist>(context, listen: false).getWishlistProvider());
@@ -39,28 +37,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   sharingUrl() {
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
-      if (value != null && value != "") {
-        setState(() {
-          _sharedText = value;
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        print("Getting url");
+        _intentDataStreamSubscription =
+            ReceiveSharingIntent.getTextStream().listen((String value) {
+          if (value != null && value != "") {
+            setState(() {
+              _sharedText = value;
+            });
+          }
+        }, onError: (err) {
+          print("getLinkStream error: $err");
         });
-      }
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
 
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then((String value) {
-      if (value != null && value != "") {
-        setState(() {
-          _sharedText = value;
+        // For sharing or opening urls/text coming from outside the app while the app is closed
+        ReceiveSharingIntent.getInitialText().then((String value) {
+          if (value != null && value != "") {
+            setState(() {
+              _sharedText = value;
+            });
+          }
+        }, onError: (err) {
+          print("getLinkStream error: $err");
         });
-      }
-    }, onError: (err) {
-      print("getLinkStream error: $err");
+      });
     });
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
   }
 
   @override
@@ -70,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   setTextEmpty() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 4), () {
       setState(() {
         _sharedText = "";
       });
@@ -81,9 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     objWish = Provider.of<Wishlist>(context, listen: true).getWishList;
     if (_sharedText != "" && _sharedText != null) {
-      setTextEmpty();
       Provider.of<SearchBarURL>(context, listen: false)
           .getProductInfo(_sharedText);
+      setTextEmpty();
     }
 
     return Scaffold(

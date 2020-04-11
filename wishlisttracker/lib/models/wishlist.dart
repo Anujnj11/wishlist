@@ -18,12 +18,13 @@ class Wishlist extends ChangeNotifier {
   List<dynamic> targetPrice;
   String targetPriceInPer;
   int validTillDate;
-  String pushNotification;
+  bool pushNotification;
   List<dynamic> wishImages;
   List<dynamic> notes;
   List<dynamic> negativeReview;
   List<dynamic> positiveReview;
   int perChange;
+  bool isActive;
 
   Wishlist(
       {this.userInfoId,
@@ -43,6 +44,7 @@ class Wishlist extends ChangeNotifier {
       this.perChange,
       this.scrapePrice,
       this.negativeReview,
+      this.isActive,
       this.positiveReview});
 
   List<Wishlist> get getWishList =>
@@ -67,6 +69,7 @@ class Wishlist extends ChangeNotifier {
       negativeReview = json["negativeReview"];
       positiveReview = json["positiveReview"];
       scrapePrice = json["scrapePrice"];
+      isActive = json["isActive"];
 
       double cp = double.parse(currentPrice);
       double sp = double.parse(scrapePrice);
@@ -92,8 +95,9 @@ class Wishlist extends ChangeNotifier {
       List<Wishlist> tempO = wishListParser(dynamicBody);
       wishListObj = new ValueNotifier<List<Wishlist>>(tempO);
     }
-    wishListObj.notifyListeners();
-    notifyListeners();
+    if (wishListObj != null) {
+      wishListObj.notifyListeners();
+      notifyListeners();
+    }
   }
-
 }

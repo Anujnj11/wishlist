@@ -27,7 +27,12 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
   TextEditingController _productName;
   TextEditingController _productPrice;
   double masterBasePer = 0.5;
+  double minDragValue = 1.0;
+  double maxDragValue = 100.0;
+
   final RoundedLoadingButtonController _saveBtnController =
+      new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _updateBtnController =
       new RoundedLoadingButtonController();
 
   @override
@@ -45,13 +50,40 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     values = RangeValues(minPrice, basePrice);
     labels =
         RangeLabels(minPrice.toInt().toString(), basePrice.toInt().toString());
+    setState(() {
+      minDragValue = minPrice;
+      maxDragValue = basePrice;
+    });
+  }
+
+  editRange(SearchBarURL searchBarD) {
+    double price = double.tryParse(searchBarD.price);
+    double minStartPrice = masterBasePer * price;
+    double maxbasePrice = price;
+
+    double minPrice = double.tryParse(searchBarD.targetPrice[0]);
+    double basePrice = double.tryParse(searchBarD.targetPrice[1]);
+    values = RangeValues(minPrice, basePrice);
+    labels =
+        RangeLabels(minPrice.toInt().toString(), basePrice.toInt().toString());
+    _productPrice.text = searchBarD.price;
+
+    setState(() {
+      minDragValue = minStartPrice;
+      maxDragValue = maxbasePrice;
+    });
   }
 
   updateText(SearchBarURL searchBarD) {
     _productName.text = searchBarD.productName;
     _productPrice.text = searchBarD.price;
-    if (searchBarD.price != null && searchBarD.price != "") {
+    if (searchBarD.id == null &&
+        searchBarD.price != null &&
+        searchBarD.price != "") {
       changeRange(double.parse(searchBarD.price));
+    }
+    if (searchBarD.targetPrice != null && searchBarD.targetPrice.length > 0) {
+      editRange(searchBarD);
     }
     setState(() {
       fieldsUp = true;
@@ -71,19 +103,9 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     labels = RangeLabels('1', '100');
   }
 
-  double _getMinFlag() {
-    double price =
-        _productPrice.text != "" ? (masterBasePer * int.parse(_productPrice.text)) : 1.0;
-    return price;
-  }
-
-  double _getMaxFlag() {
-    double price =
-        _productPrice.text != "" ? (double.parse(_productPrice.text)) : 100.0;
-    return price;
-  }
-
   void saveWish(UserInfo userInfo, SearchBarURL objSearched) async {
+    DateTime currentDate = DateTime.now();
+    currentDate = currentDate.add(Duration(days: 365));
     var reqBody = {
       "userInfoId": userInfo.id,
       "masterWebsiteId": objSearched.masterWebsiteId,
@@ -92,6 +114,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
       "name": _productName.text,
       "currentPrice": _productPrice.text,
       "currentRating": objSearched.rating,
+      "validTillDate": currentDate.toString(),
       "targetPrice": [values.start.toString(), values.end.toString()],
       "scrapePrice": _productPrice.text,
     };
@@ -99,7 +122,25 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
     showInfo = false;
     _saveBtnController.success();
     clearFields();
-    Provider.of<Wishlist>(context).getWishlistProvider();
+    Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
+  }
+
+  void updateWish(UserInfo userInfo, SearchBarURL objSearched) async {
+    var reqBody = {
+      "userInfoId": userInfo.id,
+      "id": objSearched.id,
+      "currentPrice": _productPrice.text,
+      "name": _productName.text,
+      "targetPrice": [values.start.toString(), values.end.toString()],
+      "isActive": objSearched.isActive,
+      "pushNotification": objSearched.pushNotification,
+    };
+
+    await SearchBarURL().updateWish(reqBody);
+    showInfo = false;
+    _updateBtnController.success();
+    clearFields();
+    Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
   }
 
   @override
@@ -134,7 +175,7 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[HowTo(),Profile()],
+                        children: <Widget>[HowTo(), Profile()],
                       ),
                       if (!fieldsUp)
                         Padding(
@@ -191,18 +232,28 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                               child: RoundedLoadingButton(
                                                 color: Theme.of(context)
                                                     .primaryColor,
-                                                child: Text('Save',
+                                                child: Text(
+                                                    searchBarD.id != null
+                                                        ? 'Update'
+                                                        : 'Save',
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor)),
-                                                controller: _saveBtnController,
+                                                controller:
+                                                    searchBarD.id != null
+                                                        ? _updateBtnController
+                                                        : _saveBtnController,
                                                 onPressed: () {
                                                   UserInfo userIn =
                                                       Provider.of<UserInfo>(
                                                               context,
                                                               listen: false)
                                                           .getUserInfo;
-                                                  saveWish(userIn, searchBarD);
+                                                  searchBarD.id != null
+                                                      ? updateWish(
+                                                          userIn, searchBarD)
+                                                      : saveWish(
+                                                          userIn, searchBarD);
                                                 },
                                               ),
                                             )
@@ -320,14 +371,16 @@ class _HomeScreenHeaderState extends State<HomeScreenHeader> {
                                                   ),
                                                 ),
                                                 RangeSlider(
-                                                  min: _getMinFlag(),
-                                                  max: _getMaxFlag(),
+                                                  min:
+                                                      minDragValue, //_getMinFlag(),
+                                                  max:
+                                                      maxDragValue, //_getMaxFlag(),
                                                   values: values,
                                                   onChangeStart: (value) {
                                                     FocusScope.of(context)
                                                         .unfocus();
                                                   },
-                                                  divisions: 20,
+                                                  divisions: 50,
                                                   labels: labels,
                                                   activeColor: Theme.of(context)
                                                       .primaryColor, //Color(4281320352),

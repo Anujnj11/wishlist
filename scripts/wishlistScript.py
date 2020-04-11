@@ -23,11 +23,19 @@ import os
 def startWith(masterWebsite, url):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument('--disable-gpu')
     # chrome_options.add_argument("--window-size=1920x1080")
-    chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
+    # chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
+    # chrome_driver = '.chromedriver_linux1'
+
+    # driver = webdriver.Chrome(
+    #     chrome_options=chrome_options, executable_path=chrome_driver)
     driver = webdriver.Chrome(
-        chrome_options=chrome_options, executable_path=chrome_driver)
+        executable_path='/usr/bin/chromedriver', options=chrome_options)
+
+    # driver = webdriver.Chrome(chrome_options=chrome_options,executable_path="/usr/bin/chromedriver")
     return process_price(driver, masterWebsite, url)
 
 

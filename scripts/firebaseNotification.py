@@ -4,7 +4,8 @@ registration_token = 'Key=AAAAjVdV8mc:APA91bHyIy8h3Wj1cRbH9g9-wUrS-Yt2I3yep3xl-G
 
 
 def send_to_token(firebaseId, title, msg):
-    data = {"notification": {"title": title,"body": msg}, "to": firebaseId}
+    data = {"notification": {"title": title, "body": msg,
+                             "click_action": 'FLUTTER_NOTIFICATION_CLICK'}, "to": firebaseId}
     data_json = json.dumps(data)
     print(data_json)
     headers = {'Content-type': 'application/json',

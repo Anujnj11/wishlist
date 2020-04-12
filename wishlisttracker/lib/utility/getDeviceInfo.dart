@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
 import './apiCalling.dart';
+import 'localNotification.dart';
 
 class DeviceInfo {
   DeviceInfo._();
@@ -36,11 +37,8 @@ class DeviceInfo {
   }
 
   saveDeviceInfo(context, firebaseId) {
-    // UserInfo().setUserInfo(deviceId, firebaseId);
     Provider.of<UserInfo>(context, listen: false)
         .setUserInfo(deviceId, firebaseId);
-    // var reqBody = {"deviceId": deviceId, "firebaseId": firebaseId};
-    // ApiCalling.postReq('userToken', reqBody);
   }
 }
 
@@ -53,6 +51,8 @@ class PushNotificationsManager {
       PushNotificationsManager._();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final LocalNotification objLocal = new LocalNotification();
+
   bool _initialized = false;
   String firebaseToken;
 
@@ -74,12 +74,24 @@ class PushNotificationsManager {
   void getMessage() {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
+      objLocal.init();
+      String title = message["notification"]["title"];
+      String body = message["notification"]["body"];
+      objLocal.notification(title, body);
       print('on message $message');
       // print(message);
     }, onResume: (Map<String, dynamic> message) async {
+      objLocal.init();
+      String title = message["notification"]["title"];
+      String body = message["notification"]["body"];
+      objLocal.notification(title, body);
       print('on resume $message');
       // print(message);
     }, onLaunch: (Map<String, dynamic> message) async {
+      objLocal.init();
+      String title = message["notification"]["title"];
+      String body = message["notification"]["body"];
+      objLocal.notification(title, body);
       print('on launch $message');
       // print(message);
     });

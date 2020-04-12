@@ -187,6 +187,14 @@ def get_wish_history():
         print(err)
         return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
+
+@app.route('/sendNotification', methods=['GET'])
+def sendNotification():
+    token = request.args["token"]
+    firebaseNotification.send_to_token(token, "Hello", "Bodyyyyyy")
+    return Response({"statu": "1"}, mimetype="application/json", status=200)
+
+
 # @app.route('/movies/<id>', methods=['PUT'])
 # def update_movie(id):
 #     body = request.get_json()
@@ -202,7 +210,6 @@ def get_wish_history():
 # def get_movie(id):
 #     movies = Movie.objects.get(id=id).to_json()
 #     return Response(movies, mimetype="application/json", status=200)
-
 
 if __name__ == '__main__':
     import os

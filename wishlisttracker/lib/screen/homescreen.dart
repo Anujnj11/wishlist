@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   sharingUrl() {
-    Future.delayed(const Duration(milliseconds: 5000), () {
+    Future.delayed(const Duration(seconds: 3), () {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         print("Getting url");
         _intentDataStreamSubscription =

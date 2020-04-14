@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wishlisttracker/animation/fadeIn.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/models/wishlistHistory.dart';
@@ -57,7 +57,7 @@ class WishlistDetailsState extends State<WishlistDetails> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[PriceHistory(widget.wishObj,wishHistory)],
+                  children: <Widget>[PriceHistory(widget.wishObj, wishHistory)],
                 ),
               ),
               Padding(
@@ -242,9 +242,7 @@ class WishlistDetailsState extends State<WishlistDetails> {
                       ),
                     ),
                     onChanged: (result) {
-                      FlutterWebBrowser.openWebPage(
-                          url: widget.wishObj.websiteUrl,
-                          androidToolbarColor: Theme.of(context).accentColor);
+                      launch(widget.wishObj.websiteUrl);
                     },
                   ),
                 ),

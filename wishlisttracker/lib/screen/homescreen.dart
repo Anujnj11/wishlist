@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:wishlisttracker/models/masterWebsite.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/widgets/productsFilter.dart';
@@ -18,14 +19,20 @@ class _HomeScreenState extends State<HomeScreen> {
   StreamSubscription _intentDataStreamSubscription;
   String _sharedText;
   List<Wishlist> objWish;
+  List<MasterWebsite> objMaster = [];
+
   @override
   void initState() {
     super.initState();
     // Future.delayed(duration)
     sharingUrl();
 
-    Future.microtask(() =>
-        Provider.of<Wishlist>(context, listen: false).getWishlistProvider());
+    Future.microtask(() {
+      print("Inside homescreen");
+      Provider.of<Wishlist>(context, listen: false).getWishlistProvider();
+      Provider.of<MasterWebsite>(context, listen: false)
+          .getMasterWebsiteProvider();
+    });
   }
 
   setProductUrl(value) {
@@ -83,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     objWish = Provider.of<Wishlist>(context, listen: true).getWishList;
+    objMaster =
+        Provider.of<MasterWebsite>(context, listen: true).getVendorWebsite;
     if (_sharedText != "" && _sharedText != null) {
       Provider.of<SearchBarURL>(context, listen: false)
           .getProductInfo(_sharedText);
@@ -95,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: MediaQuery.of(context).padding.top - 2),
           HomeScreenHeader(),
           SizedBox(height: 10),
-          ProductsFilter(),
+          ProductsFilter(objMaster),
           ProductList(objWish),
         ],
       ),

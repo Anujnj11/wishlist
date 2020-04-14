@@ -1,54 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wishlisttracker/animation/fadeIn.dart';
+import 'package:wishlisttracker/models/masterWebsite.dart';
 
 class ProductsFilter extends StatefulWidget {
+  final List<MasterWebsite> objMaster;
+  ProductsFilter(this.objMaster, {Key key}) : super(key: key);
   @override
   _ProductsFilterState createState() => _ProductsFilterState();
 }
 
 class _ProductsFilterState extends State<ProductsFilter> {
-  List<dynamic> supportedVendor = [];
   @override
   void initState() {
     super.initState();
-    _setSupportedVendor();
   }
 
-//
-  void _setSupportedVendor() {
-    supportedVendor
-        .add({"initial": "A", "vendorName": "Amazon", "logoColor": 4294158407});
-    supportedVendor.add(
-        {"initial": "F", "vendorName": "Flipkart", "logoColor": 4280841456});
-    supportedVendor
-        .add({"initial": "M", "vendorName": "Myntra", "logoColor": 4280841456});
-    supportedVendor
-        .add({"initial": "J", "vendorName": "JABONG", "logoColor": 4280841456});
-    supportedVendor
-        .add({"initial": "J", "vendorName": "JABONG", "logoColor": 4280841456});
-    supportedVendor
-        .add({"initial": "J", "vendorName": "JABONG", "logoColor": 4280841456});
-    supportedVendor
-        .add({"initial": "J", "vendorName": "JABONG", "logoColor": 4280841456});
-  }
-
-  Widget getVendorChip(vendorObj) {
-    return Padding(
-      padding: EdgeInsets.only(right: 5.0),
-      child: Chip(
-        avatar: CircleAvatar(
-          backgroundColor: Theme.of(context).accentColor,
-          child: Text(
-            vendorObj["initial"],
-            style: TextStyle(
-                fontSize: 20.0,
-                color: Color(vendorObj["logoColor"]), //Theme.of(context).scaffoldBackgroundColor,
-                fontWeight: FontWeight.w700),
+  Widget getVendorChip(MasterWebsite vendorObj) {
+    return GestureDetector(
+      onTap: () async {
+        await launch(vendorObj.url);
+      },
+      child: FadeIn(
+        0.8,
+        Padding(
+          padding: EdgeInsets.only(right: 5.0),
+          child: Chip(
+            avatar: CircleAvatar(
+              backgroundColor: Theme.of(context).accentColor,
+              child: Text(
+                vendorObj.chipC,
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Color(vendorObj.brandColor),
+                    // Color(vendorObj[
+                    // "logoColor"]), //Theme.of(context).scaffoldBackgroundColor,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+            label: Text(
+              vendorObj.title,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-        label: Text(
-          vendorObj["vendorName"],
-          style: TextStyle(fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -63,9 +57,10 @@ class _ProductsFilterState extends State<ProductsFilter> {
             padding: EdgeInsets.only(left: 5.0),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: supportedVendor.length,
+                itemCount: widget.objMaster.length, //supportedVendor.length,
                 itemBuilder: (context, index) {
-                  var vendorType = supportedVendor[index];
+                  var vendorType =
+                      widget.objMaster[index]; //supportedVendor[index];
                   return getVendorChip(vendorType);
                 })),
         Padding(

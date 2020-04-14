@@ -13,4 +13,5 @@ class masterWebsite(db.Document):
     nameClass = db.StringField()
     nameId = db.StringField()
     ratingClass = db.StringField()
+    brandColor = db.StringField()
     isActive = db.BooleanField(default=True)

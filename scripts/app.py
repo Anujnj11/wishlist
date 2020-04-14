@@ -174,7 +174,7 @@ def get_wish_history():
         body = request.get_json()
         pipeline = [
             {'$match': {'userWishlistId': ObjectId(body["userWishlistId"])}},
-            {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$createdAt'}},
+            {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$createdAt', 'timezone': "+05:30"}},
                         'minPrice': {'$min': '$scrapePrice'}, 'doc': {'$first': '$$ROOT'}}},
             {'$replaceRoot': {'newRoot': '$doc'}},
             {'$sort': {'createdAt': 1}}

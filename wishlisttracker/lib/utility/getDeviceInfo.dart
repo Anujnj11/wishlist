@@ -1,5 +1,6 @@
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
 import './apiCalling.dart';
@@ -15,7 +16,9 @@ class DeviceInfo {
   bool _initialized = false;
 
   PushNotificationsManager pnObj = new PushNotificationsManager();
+  PackageInfo packageInfo;
   String deviceId;
+  String userAppVersion;
 
   Future<void> init(context) async {
     if (!_initialized) {
@@ -32,13 +35,23 @@ class DeviceInfo {
 
   getFireBaseId(context) async {
     String firebaseId = await pnObj.init();
-    // pnObj.getMessage();
-    saveDeviceInfo(context, firebaseId);
+    String getAV = await getAppVersion();
+    saveDeviceInfo(context, firebaseId, getAV);
   }
 
-  saveDeviceInfo(context, firebaseId) {
+  saveDeviceInfo(context, firebaseId, getAV) {
     Provider.of<UserInfo>(context, listen: false)
-        .setUserInfo(deviceId, firebaseId);
+        .setUserInfo(deviceId, firebaseId, getAV);
+  }
+
+  getAppVersion() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    userAppVersion =  packageInfo.version;
+    return userAppVersion;
+  }
+
+  getUserVersion(){
+    return userAppVersion;
   }
 }
 

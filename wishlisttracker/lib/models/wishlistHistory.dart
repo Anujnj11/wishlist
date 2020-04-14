@@ -61,9 +61,10 @@ class WishlistHistory extends ChangeNotifier {
     if (dynamicBody != null) {
       List<WishlistHistory> tempO0 = wishListParser(dynamicBody);
       wishListHistoryObj = new ValueNotifier<List<WishlistHistory>>(tempO0);
+      wishListHistoryObj.notifyListeners();
+      notifyListeners();
     }
-    wishListHistoryObj.notifyListeners();
-    notifyListeners();
+
     print("Got history");
   }
 

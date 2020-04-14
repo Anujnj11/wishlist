@@ -11,7 +11,7 @@ class ApiCalling {
       return response.body;
     } catch (err) {
       print(err);
-      return {};
+      return null;
     }
   }
 

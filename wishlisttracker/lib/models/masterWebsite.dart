@@ -5,6 +5,7 @@ import 'package:wishlisttracker/utility/apiCalling.dart';
 
 class MasterWebsite extends ChangeNotifier {
   ValueNotifier<List<MasterWebsite>> _vendorWebsite;
+  ValueNotifier<bool> _hasInternet;
 
   String websiteName;
   String title;
@@ -29,6 +30,8 @@ class MasterWebsite extends ChangeNotifier {
 
   List<MasterWebsite> get getVendorWebsite =>
       _vendorWebsite != null ? _vendorWebsite.value : [];
+
+  bool get getHasInternet => _hasInternet == null ? true : _hasInternet.value;
 
   MasterWebsite.fromJson(Map<String, dynamic> json) {
     if (json != null) {
@@ -55,6 +58,14 @@ class MasterWebsite extends ChangeNotifier {
     }
     if (_vendorWebsite != null) {
       _vendorWebsite.notifyListeners();
+      notifyListeners();
+    }
+  }
+
+  void setHasInternet(bool hasIn) {
+    _hasInternet.value = hasIn;
+    if (_hasInternet != null) {
+      _hasInternet.notifyListeners();
       notifyListeners();
     }
   }

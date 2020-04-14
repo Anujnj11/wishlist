@@ -43,7 +43,7 @@ class LocalNotification {
     );
   }
 
-  Future onSelectNotification(String payLoad) {
+  void onSelectNotification(String payLoad) {
     if (payLoad != null) {
       print(payLoad);
     }

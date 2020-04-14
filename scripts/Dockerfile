@@ -12,7 +12,7 @@ ENV PORT 5000
 WORKDIR /app
 # CMD python3 /app/app.py
 
-CMD ["gunicorn", "--config", "./gunicorn_config.py", "app:app"]
+CMD ["gunicorn", "--config", "./gunicorn_config.py", "app:app", "-e CURRENT_APP_VERSION=1.0.0","-e IS_MANDATORY=false"]
 
 # CMD gunicorn 0.0.0.0:5000 ./app/app.py
 # CMD ["gunicorn", "-w 4", "main:app"]

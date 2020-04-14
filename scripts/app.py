@@ -92,11 +92,14 @@ def update_user():
         new_user = userInfo.objects(deviceId=body["deviceId"]).modify(upsert=True, new=True,
                                                                       set__deviceId=body["deviceId"],
                                                                       set__firebaseId=body["firebaseId"],
+                                                                      set__appVersion=body["appVersion"]
                                                                       )
         userInfoD = {
             "id": str(new_user.id),
             "deviceId": new_user.deviceId,
             "firebaseId": new_user.firebaseId,
+            "currentAppVersion": os.environ.get("CURRENT_APP_VERSION", "failed"),
+            "isMandatory": os.environ.get("IS_MANDATORY", "failed"),
             "statusCode": 1
         }
         userInfoD = json.dumps(userInfoD)

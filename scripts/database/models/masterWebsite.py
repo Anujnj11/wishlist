@@ -2,9 +2,12 @@ from .db import db
 
 
 class masterWebsite(db.Document):
+    title = db.StringField()
+    url = db.URLField()
     websiteName = db.StringField()
     domainName = db.StringField()
     priceClass = db.StringField()
+    priceId = db.StringField()
     imagesClass = db.StringField()
     reviewClass = db.StringField()
     nameClass = db.StringField()

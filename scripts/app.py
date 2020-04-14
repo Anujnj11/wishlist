@@ -195,11 +195,11 @@ def sendNotification():
     return Response({"statu": "1"}, mimetype="application/json", status=200)
 
 
-# @app.route('/movies/<id>', methods=['PUT'])
-# def update_movie(id):
-#     body = request.get_json()
-#     Movie.objects.get(id=id).update(**body)
-#     return '', 200
+@app.route('/get_master_website', methods=['GET'])
+def get_master_website():
+    master_list = masterWebsite.objects(isActive=True).all()
+    master_list = master_list.to_json()
+    return Response(master_list, mimetype="application/json", status=200)
 
 # @app.route('/movies/<id>', methods=['DELETE'])
 # def delete_movie(id):
@@ -210,6 +210,7 @@ def sendNotification():
 # def get_movie(id):
 #     movies = Movie.objects.get(id=id).to_json()
 #     return Response(movies, mimetype="application/json", status=200)
+
 
 if __name__ == '__main__':
     import os

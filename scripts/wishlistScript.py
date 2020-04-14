@@ -25,13 +25,13 @@ def startWith(masterWebsite, url):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-gpu')
     # chrome_options.add_argument("--window-size=1920x1080")
     # chrome_driver = '/home/anuj/Pictures/Anuj/Office Code/wishlist/scripts/chromedriver_linux1'
     # chrome_driver = '.chromedriver_linux1'
 
     # driver = webdriver.Chrome(
-    # chrome_options=chrome_options, executable_path=chrome_driver)
+    #     chrome_options=chrome_options, executable_path=chrome_driver)
     driver = webdriver.Chrome(
         executable_path='/usr/bin/chromedriver', options=chrome_options)
 
@@ -62,11 +62,23 @@ def extract_info(driver, masterWebsite):
 
 def get_price(driver, masterWebsite):
     try:
-        price = driver.find_element_by_class_name(masterWebsite.priceClass)
+        if masterWebsite.priceClass:
+            price = driver.find_element_by_class_name(masterWebsite.priceClass)
+        else:
+            price = driver.find_element_by_id(masterWebsite.priceId)
         price = price.text
-        price = price.split(".")
-        price = price[0]
-        return re.sub("\\W+", '', price)
+        price = re.findall(r"[0 -9]+", price)
+        temp_price = ""
+        for p in price:
+            if "." in p:
+                temp_p = re.findall(r".*(?=\.)", p)
+                temp_p = len(temp_p) and temp_p[0]
+            else:
+                temp_p = p
+            temp_price = re.sub("\\W+", '', temp_p)
+            if temp_price:
+                break
+        return re.sub("\\W+", '', temp_price)
     except Exception as err:
         print(err)
         return ""
@@ -96,7 +108,8 @@ def get_rating(driver, masterWebsite):
         rating = driver.find_element_by_class_name(masterWebsite.ratingClass)
         if rating:
             rating = rating.get_attribute("innerHTML")
-            rating = re.findall("\\d+\\.\\d+", rating)
+            # rating = re.findall("\\d+\\.\\d+", rating)
+            rating = re.findall("\\d*[.,]?\\d*", rating)
             rating = len(rating) and rating[0]
         return rating
     except Exception as err:

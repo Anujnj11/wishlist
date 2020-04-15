@@ -42,8 +42,7 @@ class WishlistHistory extends ChangeNotifier {
       scrapeNegativeReview = json["scrapeNegativeReview"];
       scrapePositiveReview = json["scrapePositiveReview"];
       scrapePrice = json["scrapePrice"];
-      createdAt =
-          DateTime.fromMillisecondsSinceEpoch(json["createdAt"]["\$date"]);
+      createdAt = DateTime.parse(json["convertedDate"]);
     }
   }
 

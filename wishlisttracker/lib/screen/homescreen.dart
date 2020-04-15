@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wishlisttracker/models/masterWebsite.dart';
 import 'package:wishlisttracker/models/searchBarUrl.dart';
 import 'package:wishlisttracker/models/userInfo.dart';
@@ -107,10 +108,43 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget updateApp() {
-    return Column(children: <Widget>[
-      SizedBox(height: MediaQuery.of(context).padding.top - 2),
-      Text("Update app"),
-    ]);
+    return Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              "assets/updateApp.png",
+              height: 150.0,
+            ),
+            Text(
+              "Oh, We got update for you",
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w500),
+            ),
+            Text(
+              "update app to enjoy new features",
+              style: TextStyle(
+                  fontSize: 19.0,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey.shade400),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              child: Text(
+                "Update App",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                launch(
+                    "https://play.google.com/store/apps/details?id=in.pricehistory.app");
+              },
+              color: Theme.of(context).accentColor,
+            ),
+          ]),
+    );
   }
 
   Widget validBody() {

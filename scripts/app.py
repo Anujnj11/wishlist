@@ -174,12 +174,15 @@ def scrape_User_wish():
 @app.route('/getWishHistory', methods=['POST'])
 def get_wish_history():
     try:
+        # 'timezone': "+05:30"
         body = request.get_json()
         pipeline = [
             {'$match': {'userWishlistId': ObjectId(body["userWishlistId"])}},
-            {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$createdAt', 'timezone': "+05:30"}},
+            {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$createdAt'}},
                         'minPrice': {'$min': '$scrapePrice'}, 'doc': {'$first': '$$ROOT'}}},
             {'$replaceRoot': {'newRoot': '$doc'}},
+            {'$addFields': {'convertedDate': {'$dateToString': {
+                'format': '%Y-%m-%d',  'date': '$createdAt'}}}},
             {'$sort': {'createdAt': 1}}
         ]
         wish_list_history = list(scrapeWish.objects().aggregate(pipeline))

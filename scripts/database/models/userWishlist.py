@@ -1,11 +1,11 @@
 
 from datetime import datetime
 from .db import db
-from .exportModel import userInfo, masterWebsite
+from .exportModel import *
 from mongoengine import *
 from mongoengine import signals
-import firebaseNotification
 from bson import json_util
+from .firebaseNotify import *
 
 
 class userWishlist(db.Document):
@@ -34,9 +34,10 @@ class userWishlist(db.Document):
             if 'created' in kwargs:
                 if kwargs['created']:
                     print("Created")
-                    firebaseId = document.userInfoId.firebaseId
-                    firebaseNotification.send_to_token(
-                        firebaseId, "Done !", "Your wishlist has set")
+                    # firebaseId = document.userInfoId.firebaseId
+                    userInfD = document["userInfoId"]
+                    firebaseNotify().send_to_token(
+                        userInfD, "Done !", "Your wishlist has set")
                 else:
                     print("Updated")
         except Exception as err:

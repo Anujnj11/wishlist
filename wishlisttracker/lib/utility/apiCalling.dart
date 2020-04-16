@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiCalling {
   // static String endpoint = "https://wishlist-an.herokuapp.com";
-  static String endpoint = "https://bad1973d.ngrok.io";
+  static String endpoint = "https://e71f2eb1.ngrok.io";
 
   static Future<dynamic> getReq(urlPath) async {
     try {

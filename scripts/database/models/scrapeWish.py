@@ -1,11 +1,11 @@
 
 from datetime import datetime
 from .db import db
-from .exportModel import userInfo, masterWebsite, userWishlist
+from .exportModel import *
 from mongoengine import *
 from mongoengine import signals
-import firebaseNotification
 from bson import json_util
+from .firebaseNotify import firebaseNotify
 
 
 class scrapeWish(db.Document):
@@ -29,12 +29,13 @@ class scrapeWish(db.Document):
                     print("Created Scrape User")
                     push_notification = document["pushNotification"]
                     if push_notification:
-                        firebaseId = document["userInfoId"]["firebaseId"]
+                        # firebaseId = document["userInfoId"]["firebaseId"]
+                        userInfoD = document["userInfoId"]
                         title = "Congo Price drop {} 😎".format(
                             document["name"])
                         body = "Navigate to product to buy 🛒"
-                        firebaseNotification.send_to_token(
-                            firebaseId, title, body)
+                        firebaseNotify().send_to_token(
+                            userInfoD, title, body, document["userWishlistId"])
         except Exception as err:
             print(err)
 

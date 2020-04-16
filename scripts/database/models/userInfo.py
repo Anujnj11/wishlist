@@ -3,7 +3,8 @@ from datetime import datetime
 from .db import db
 from mongoengine import *
 from mongoengine import signals
-import firebaseNotification
+from .exportModel import *
+from .firebaseNotify import *
 
 
 class userInfo(db.Document):
@@ -22,9 +23,10 @@ class userInfo(db.Document):
         if 'created' in kwargs:
             if kwargs['created']:
                 print("Created")
-                firebaseId = document.firebaseId
-                firebaseNotification.send_to_token(
-                    firebaseId, "Hello !!", "Welcome to wishlist")
+                # firebaseId = document.firebaseId
+                userInfoD = document
+                firebaseNotify().send_to_token(
+                    userInfoD, "Hello !!", "Welcome to wishlist")
             else:
                 print("Updated")
 

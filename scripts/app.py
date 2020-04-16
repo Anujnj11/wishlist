@@ -3,14 +3,14 @@ import os
 from flask import Flask
 from flask import Flask, jsonify, request, Response
 from database.models.db import initialize_db
-from database.models.exportModel import masterWebsite, userInfo, userWishlist, scrapeWish
+from database.models.exportModel import *
 import wishlistScript
-import firebaseNotification
 from tldextract import tldextract
 from bson import ObjectId, json_util
 import re
 import userWishScrape
 import scheduler
+import firebaseNotification
 
 app = Flask(__name__)
 app.config['DEBUG'] = False
@@ -194,11 +194,19 @@ def get_wish_history():
         return Response({'statusCode': 0}, mimetype="application/json", status=500)
 
 
-@app.route('/sendNotification', methods=['GET'])
-def sendNotification():
-    token = request.args["token"]
-    firebaseNotification.send_to_token(token, "Hello", "Bodyyyyyy")
-    return Response({"statu": "1"}, mimetype="application/json", status=200)
+# @app.route('/sendNotification', methods=['GET'])
+# def sendNotification():
+#     # token = request.args["token"]
+#     userInfo = {
+#         "_id": {
+#             "$oid": "5e8613583207d756ed969253"
+#         },
+#         "deviceId": "e4625b2b36d56590",
+#         "firebaseId": "emq_9p3Pg4I:APA91bGCbJSwpZT0BK41byFYmYPw6m5ceuai67C9JQg0iTSqVdv2eUcF9FFMo9ME-8PrCqsXRFqaodzMJ-reo0QQomy0vm-0vrPip7cLILP2P4do6LzfWEjfKyJTBXQNFxhSGb8E_R1t",
+#         "appVersion": "1.0.0"
+#     }
+#     firebaseNotify().send_to_token(userInfo, "Hello", "Bodyyyyyy")
+#     return Response({"statu": "1"}, mimetype="application/json", status=200)
 
 
 @app.route('/get_master_website', methods=['GET'])

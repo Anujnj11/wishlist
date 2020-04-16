@@ -37,7 +37,7 @@ def save_wish_scrape(productInfo, scrapeData):
         "name": productInfo["name"],
         "scrapePrice": scrapeData["price"]
     }
-    if(min_target_price <= scrapeData["price"] <= max_target_price):
+    if(float(min_target_price) <= float(scrapeData["price"]) <= float(max_target_price)):
         body["pushNotification"] = True
     else:
         body["pushNotification"] = False

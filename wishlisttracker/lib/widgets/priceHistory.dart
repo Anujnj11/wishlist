@@ -1,7 +1,6 @@
 // import 'package:fl_chart/fl_chart.dart';
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wishlisttracker/models/wishlist.dart';
 import 'package:wishlisttracker/models/wishlistHistory.dart';
 

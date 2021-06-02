@@ -22,6 +22,6 @@ selenium==3.141.0
 six==1.14.0
 tldextract==2.2.2
 tzlocal==2.0.0
-urllib3==1.25.8
+urllib3==1.26.5
 Werkzeug==1.0.1
 WTForms==2.2.1
